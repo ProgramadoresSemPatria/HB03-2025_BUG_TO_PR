@@ -7,20 +7,35 @@ interface UseScrollOptions {
 }
 
 export function useScroll({ threshold = 20 }: UseScrollOptions = {}) {
-  const [scrolled, setScrolled] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [scrolled, setScrolled] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.scrollY > threshold;
+    }
+    return false;
+  });
+  const [scrollY, setScrollY] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.scrollY;
+    }
+    return 0;
+  });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
       setScrolled(currentScrollY > threshold);
     };
 
+    // Check initial scroll position
+    handleScroll();
+    
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [threshold]);
 
-  return { scrolled, scrollY };
+  return { scrolled, scrollY, isMounted };
 }
 

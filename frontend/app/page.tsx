@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, GitPullRequest, Sparkles, Check, Rocket } from "lucide-react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { ArrowRight, GitPullRequest, Sparkles, Check, Rocket, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Header, Footer } from "@/components/shared";
 import { CHANGELOG, DEMO_CODE_LINES, ROUTES } from "@/constants";
@@ -11,6 +11,11 @@ import { cn } from "@/lib/utils";
 
 export default function Home() {
   const [visibleLines, setVisibleLines] = useState<number[]>([]);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springConfig = { damping: 25, stiffness: 200 };
+  const x = useSpring(useMotionValue(0), springConfig);
+  const y = useSpring(useMotionValue(0), springConfig);
 
   useEffect(() => {
     DEMO_CODE_LINES.forEach((line, index) => {
@@ -20,63 +25,251 @@ export default function Home() {
     });
   }, []);
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  useEffect(() => {
+    const unsubscribeX = mouseX.on("change", (latest) => {
+      x.set(latest / 20);
+    });
+    const unsubscribeY = mouseY.on("change", (latest) => {
+      y.set(latest / 20);
+    });
+    return () => {
+      unsubscribeX();
+      unsubscribeY();
+    };
+  }, [mouseX, mouseY, x, y]);
+
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* Subtle grid background */}
-      <div
-        className="fixed inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255,255,255)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
-        }}
-      />
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
+        
+        {/* Animated orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-chart-2/10 rounded-full blur-3xl"
+          animate={{
+            x: [0, -50, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255,255,255)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
+          }}
+        />
+      </div>
 
       <Header variant="landing" />
 
       {/* Hero Section */}
       <main className="relative z-10">
-        <section className="w-full max-w-5xl mx-auto px-6 pt-32 pb-20">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
+        <section className="w-full max-w-6xl mx-auto px-6 pt-24 pb-20">
+          {/* Floating cards */}
+          <motion.div
+            style={{ x, y }}
+            className="absolute top-20 right-10 hidden lg:block"
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
-              From Stack Trace
-              <br />
-              to{" "}
-              <span className="text-primary">Pull Request</span>
+            <div className="relative w-32 h-32">
+              <motion.div
+                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 backdrop-blur-xl border border-primary/20"
+                animate={{
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </div>
+          </motion.div>
+
+          <motion.div
+            style={{ 
+              x: useSpring(useMotionValue(0), springConfig), 
+              y: useSpring(useMotionValue(0), springConfig) 
+            }}
+            className="absolute bottom-20 left-10 hidden lg:block"
+          >
+            <div className="relative w-24 h-24">
+              <motion.div
+                className="absolute inset-0 rounded-xl bg-gradient-to-br from-chart-2/20 to-chart-2/5 backdrop-blur-xl border border-chart-2/20"
+                animate={{
+                  rotate: [0, -5, 5, 0],
+                }}
+                transition={{
+                  duration: 10,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center relative z-10"
+          >
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 backdrop-blur-sm mb-8"
+            >
+              <Zap className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                AI-Powered Bug Fixing
+              </span>
+            </motion.div>
+
+            {/* Main Title with gradient */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-8 leading-[1.05]">
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="block"
+              >
+                From{" "}
+                <span className="relative inline-block">
+                  <span className="relative z-10">Stack Trace</span>
+                  <motion.span
+                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent blur-xl"
+                    animate={{
+                      opacity: [0.5, 0.8, 0.5],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                    }}
+                  />
+                </span>
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="block mt-2"
+              >
+                to{" "}
+                <span className="relative inline-block">
+                  <span className="relative z-10 bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
+                    Pull Request
+                  </span>
+                  <motion.span
+                    className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary/10 blur-2xl"
+                    animate={{
+                      opacity: [0.4, 0.7, 0.4],
+                      scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                    }}
+                  />
+                </span>
+              </motion.span>
             </h1>
 
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">
-              Paste your error, let AI fix it, get a PR. That simple.
-            </p>
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
+            >
+              Paste your error, let AI fix it, get a PR.{" "}
+              <span className="text-foreground/80 font-medium">That simple.</span>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+              className="flex flex-col sm:flex-row gap-3 justify-center items-center"
+            >
               <Link href={ROUTES.DASHBOARD}>
-                <Button size="lg" className="h-12 px-8 gap-2 text-base">
-                  <Rocket className="h-4 w-4" />
-                  Start Fixing Bugs
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="relative group"
+                >
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-primary/60 to-primary rounded-lg blur-md opacity-40 group-hover:opacity-60 transition-opacity" />
+                  <Button 
+                    size="default" 
+                    className="relative h-10 px-6 gap-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    <Rocket className="h-4 w-4" />
+                    Start Fixing Bugs
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </Button>
+                </motion.div>
               </Link>
               <Link href={ROUTES.LOGIN}>
-                <Button variant="outline" size="lg" className="h-12 px-8 text-base">
-                  Create Account
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button 
+                    variant="outline" 
+                    size="default" 
+                    className="h-10 px-6 text-sm font-medium border backdrop-blur-sm bg-background/40 hover:bg-background/60 transition-all duration-200"
+                  >
+                    Create Account
+                  </Button>
+                </motion.div>
               </Link>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Animated Terminal Preview */}
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-16 w-full"
+            transition={{ duration: 1, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-20 w-full relative"
           >
-            <div className="rounded-xl border border-border/50 bg-[#0d1117] overflow-hidden shadow-2xl">
+            {/* Glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent rounded-2xl blur-2xl opacity-50" />
+            
+            <div className="relative rounded-2xl border border-border/50 bg-gradient-to-b from-[#0d1117] to-[#0a0d12] overflow-hidden shadow-2xl backdrop-blur-sm">
               {/* Terminal Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border/20 bg-[#161b22]">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border/20 bg-gradient-to-r from-[#161b22] to-[#1c2128]">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-2">
                     <div className="h-3 w-3 rounded-full bg-[#ff5f56]" />
@@ -90,7 +283,7 @@ export default function Home() {
               </div>
 
               {/* Terminal Content */}
-              <div className="p-6 font-mono text-sm min-h-[320px]">
+              <div className="p-6 font-mono text-sm min-h-[320px] bg-gradient-to-b from-transparent to-[#0a0d12]/50">
                 <AnimatePresence>
                   {DEMO_CODE_LINES.map((line, index) => (
                     visibleLines.includes(index) && (
@@ -200,20 +393,30 @@ export default function Home() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-2xl border border-border/30 bg-gradient-to-b from-card/50 to-card/20 p-12 text-center"
+            className="relative rounded-2xl border border-border/30 bg-gradient-to-b from-card/50 to-card/20 p-12 text-center overflow-hidden"
           >
-            <h2 className="text-3xl font-bold mb-4">
-              Ready to automate?
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-lg mx-auto">
-              Stop wasting time debugging. Let AI create Pull Requests for you.
-            </p>
-            <Link href={ROUTES.DASHBOARD}>
-              <Button size="lg" className="h-12 px-8 text-base gap-2">
-                Get Started
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+            {/* Background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50" />
+            
+            <div className="relative z-10">
+              <h2 className="text-3xl font-bold mb-4">
+                Ready to automate?
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-lg mx-auto">
+                Stop wasting time debugging. Let AI create Pull Requests for you.
+              </p>
+              <Link href={ROUTES.DASHBOARD}>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button size="default" className="h-10 px-6 text-sm font-medium gap-2">
+                    Get Started
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Button>
+                </motion.div>
+              </Link>
+            </div>
           </motion.div>
         </section>
       </main>

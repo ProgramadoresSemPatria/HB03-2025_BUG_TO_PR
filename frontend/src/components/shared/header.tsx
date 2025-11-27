@@ -14,7 +14,7 @@ interface HeaderProps {
 }
 
 export function Header({ variant = "landing" }: HeaderProps) {
-  const { scrolled } = useScroll({ threshold: 20 });
+  const { scrolled, isMounted } = useScroll({ threshold: 20 });
   const pathname = usePathname();
 
   if (variant === "app") {
@@ -54,38 +54,106 @@ export function Header({ variant = "landing" }: HeaderProps) {
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -20 }}
-      animate={{
-        opacity: scrolled ? 0 : 1,
-        y: scrolled ? -60 : 0,
-        pointerEvents: scrolled ? "none" : "auto",
+      initial={{
+        top: scrolled ? 0 : 16,
       }}
-      transition={{ duration: 0.3 }}
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-3xl px-4"
+      animate={{
+        top: scrolled ? 0 : 16,
+      }}
+      transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
+      className="fixed left-0 right-0 z-50"
     >
-      <div className="flex items-center justify-between w-full px-6 py-3 rounded-lg bg-card/60 backdrop-blur-md border border-border/40">
-        <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <Terminal className="h-5 w-5 text-foreground" />
-          <span className="font-semibold">bug-to-pr</span>
-        </Link>
-
-        <nav className="hidden sm:flex items-center gap-6 text-sm text-muted-foreground">
-          <a href="#changelog" className="hover:text-foreground transition-colors">
-            Changelog
-          </a>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <Link href={ROUTES.LOGIN}>
-            <Button variant="ghost" size="sm">
-              Sign In
-            </Button>
+      {/* Background layer - aparece quando scrolled */}
+      <motion.div
+        initial={{
+          opacity: scrolled ? 1 : 0,
+          borderBottomWidth: scrolled ? 1 : 0,
+        }}
+        animate={{
+          opacity: scrolled ? 1 : 0,
+          borderBottomWidth: scrolled ? 1 : 0,
+        }}
+        transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
+        className="absolute inset-0 bg-card/80 backdrop-blur-md shadow-sm border-b border-border/40 pointer-events-none"
+      />
+      
+      {/* Content container */}
+      <motion.div
+        initial={{
+          height: scrolled ? 64 : 56,
+          paddingTop: scrolled ? "0.75rem" : "0.5rem",
+          paddingBottom: scrolled ? "0.75rem" : "0.5rem",
+        }}
+        animate={{
+          height: scrolled ? 64 : 56,
+          paddingTop: scrolled ? "0.75rem" : "0.5rem",
+          paddingBottom: scrolled ? "0.75rem" : "0.5rem",
+        }}
+        transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
+        className="relative w-full max-w-6xl mx-auto px-6"
+      >
+        {/* Inner container - desaparece quando scrolled */}
+        <motion.div
+          initial={{
+            borderRadius: scrolled ? 0 : 8,
+            paddingLeft: scrolled ? 0 : "1.5rem",
+            paddingRight: scrolled ? 0 : "1.5rem",
+            paddingTop: scrolled ? 0 : "0.5rem",
+            paddingBottom: scrolled ? 0 : "0.5rem",
+            opacity: scrolled ? 0 : 1,
+            borderWidth: scrolled ? 0 : 1,
+            pointerEvents: scrolled ? "none" : "auto",
+          }}
+          animate={{
+            borderRadius: scrolled ? 0 : 8,
+            paddingLeft: scrolled ? 0 : "1.5rem",
+            paddingRight: scrolled ? 0 : "1.5rem",
+            paddingTop: scrolled ? 0 : "0.5rem",
+            paddingBottom: scrolled ? 0 : "0.5rem",
+            opacity: scrolled ? 0 : 1,
+            borderWidth: scrolled ? 0 : 1,
+            pointerEvents: scrolled ? "none" : "auto",
+          }}
+          transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
+          className="absolute inset-0 flex items-center justify-between rounded-lg bg-card/60 backdrop-blur-md border border-border/40"
+        />
+        
+        {/* Content - sempre visível */}
+        <div className="relative flex items-center justify-between h-full">
+          <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Terminal className="h-5 w-5 text-foreground" />
+            <span className="font-semibold text-sm">bug-to-pr</span>
           </Link>
-          <Link href={ROUTES.DASHBOARD}>
-            <Button size="sm">Get Started</Button>
-          </Link>
+
+          <motion.nav
+            initial={{
+              opacity: scrolled ? 0 : 1,
+              pointerEvents: scrolled ? "none" : "auto",
+            }}
+            animate={{
+              opacity: scrolled ? 0 : 1,
+              pointerEvents: scrolled ? "none" : "auto",
+            }}
+            transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
+            className="hidden sm:flex items-center gap-6 text-sm text-muted-foreground"
+          >
+            <a href="#changelog" className="hover:text-foreground transition-colors">
+              Changelog
+            </a>
+          </motion.nav>
+
+          <div className="flex items-center gap-2">
+            <Link href={ROUTES.LOGIN}>
+              <Button variant="ghost" size="sm">
+                Sign In
+              </Button>
+            </Link>
+            <Link href={ROUTES.DASHBOARD}>
+              <Button size="sm">Get Started</Button>
+            </Link>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </motion.header>
   );
 }
