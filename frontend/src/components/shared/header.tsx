@@ -120,9 +120,8 @@ export function Header({ variant = "landing" }: HeaderProps) {
         
         {/* Content - sempre visível */}
         <div className="relative flex items-center justify-between h-full">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
             <Terminal className="h-5 w-5 text-foreground" />
-            <span className="font-semibold text-sm">bug-to-pr</span>
           </Link>
 
           <motion.nav
@@ -135,9 +134,9 @@ export function Header({ variant = "landing" }: HeaderProps) {
               pointerEvents: scrolled ? "none" : "auto",
             }}
             transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
-            className="hidden sm:flex items-center gap-6 text-sm text-muted-foreground"
+            className="hidden sm:flex items-center absolute left-1/2 -translate-x-1/2"
           >
-            <a href="#changelog" className="hover:text-foreground transition-colors">
+            <a href="#changelog" className="inline-flex items-center gap-2 h-8 px-4 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 text-xs font-medium text-white/90 uppercase tracking-normal hover:bg-white/20 transition-colors">
               Changelog
             </a>
           </motion.nav>
