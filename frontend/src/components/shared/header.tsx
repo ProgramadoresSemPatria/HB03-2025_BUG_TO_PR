@@ -144,12 +144,12 @@ export function Header({ variant = "landing" }: HeaderProps) {
 
           <div className="flex items-center gap-2">
             <Link href={ROUTES.LOGIN}>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-white hover:text-white/80 hover:bg-white/10">
                 Sign In
               </Button>
             </Link>
             <Link href={ROUTES.DASHBOARD}>
-              <Button size="sm">Get Started</Button>
+              <Button size="default" className="h-10 px-6 bg-white text-black hover:bg-white/90">Get Started</Button>
             </Link>
           </div>
         </div>

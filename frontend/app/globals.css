@@ -37,6 +37,8 @@
   font-display: swap;
 }
 
+/* Roboto Mono font - para botões (usando Google Fonts via CSS variable) */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

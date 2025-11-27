@@ -177,11 +177,11 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
+              className="text-lg sm:text-xl text-white max-w-2xl mx-auto mb-12 leading-relaxed"
               style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
             >
               Paste your error, let AI fix it, get a PR.{" "}
-              <span className="text-foreground/80 font-medium">That simple.</span>
+              <span className="text-white/90 font-medium">That simple.</span>
             </motion.p>
 
             {/* CTA Buttons */}
@@ -191,36 +191,27 @@ export default function Home() {
               transition={{ delay: 0.9, duration: 0.6 }}
               className="flex flex-col sm:flex-row gap-3 justify-center items-center"
             >
-              <Link href={ROUTES.DASHBOARD}>
-                <motion.div
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="relative group"
-                >
+              <Link href={ROUTES.DASHBOARD} className="cursor-pointer">
+                <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-primary/60 to-primary rounded-lg blur-md opacity-40 group-hover:opacity-60 transition-opacity" />
                   <Button 
                     size="default" 
-                    className="relative h-10 px-6 gap-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="relative h-10 px-6 gap-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200 bg-white text-black hover:bg-white/90 cursor-pointer"
                   >
                     <Rocket className="h-4 w-4" />
                     Start Fixing Bugs
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </Button>
-                </motion.div>
+                </div>
               </Link>
-              <Link href={ROUTES.LOGIN}>
-                <motion.div
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
+              <Link href={ROUTES.LOGIN} className="cursor-pointer">
+                <Button 
+                  variant="outline" 
+                  size="default" 
+                  className="h-10 px-6 text-sm font-medium border-white/30 backdrop-blur-sm bg-white/20 hover:bg-white/30 text-white hover:text-white transition-all duration-200 cursor-pointer"
                 >
-                  <Button 
-                    variant="outline" 
-                    size="default" 
-                    className="h-10 px-6 text-sm font-medium border backdrop-blur-sm bg-background/40 hover:bg-background/60 transition-all duration-200"
-                  >
-                    Create Account
-                  </Button>
-                </motion.div>
+                  Create Account
+                </Button>
               </Link>
             </motion.div>
           </motion.div>
@@ -232,49 +223,54 @@ export default function Home() {
             transition={{ duration: 1, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
             className="mt-20 w-full relative"
           >
-            {/* Glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent rounded-2xl blur-2xl opacity-50" />
-            
-            <div className="relative rounded-2xl border border-border/50 bg-gradient-to-b from-[#0d1117] to-[#0a0d12] overflow-hidden shadow-2xl backdrop-blur-sm">
+            <div className="relative rounded-xl border border-gray-300 bg-white overflow-hidden shadow-lg">
+              {/* Overlay sutil para profundidade */}
+              <div className="absolute inset-0 bg-gradient-to-b from-gray-900/[0.02] via-transparent to-gray-900/[0.04] pointer-events-none z-10" />
+              
               {/* Terminal Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border/20 bg-gradient-to-r from-[#161b22] to-[#1c2128]">
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-2">
-                    <div className="h-3 w-3 rounded-full bg-[#ff5f56]" />
-                    <div className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-                    <div className="h-3 w-3 rounded-full bg-[#27ca40]" />
+              <div className="relative z-20 flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-gray-50/30">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#27ca40]" />
                   </div>
-                  <span className="text-xs text-muted-foreground font-mono ml-3">
+                  <span className="text-xs text-gray-500 font-mono">
                     bug-to-pr — ~/acme/app
                   </span>
                 </div>
               </div>
 
               {/* Terminal Content */}
-              <div className="p-6 font-mono text-sm min-h-[320px] bg-gradient-to-b from-transparent to-[#0a0d12]/50">
-                <AnimatePresence>
-                  {DEMO_CODE_LINES.map((line, index) => (
-                    visibleLines.includes(index) && (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className={cn(
-                          "leading-relaxed",
-                          line.type === "error" && "text-red-400",
-                          line.type === "trace" && "text-muted-foreground/60",
-                          line.type === "step" && "text-muted-foreground",
-                          line.type === "success" && "text-emerald-400",
-                          line.type === "link" && "text-primary",
-                          line.type === "empty" && "h-4"
-                        )}
-                      >
-                        {line.text}
-                      </motion.div>
-                    )
-                  ))}
-                </AnimatePresence>
+              <div className="relative z-20 p-8 font-mono text-sm min-h-[320px] bg-white">
+                {/* Overlay muito sutil para contraste */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,_rgba(0,0,0,0.015)_0%,_transparent_50%,_rgba(0,0,0,0.015)_100%)] pointer-events-none z-0" />
+                
+                <div className="relative z-10 space-y-1">
+                  <AnimatePresence>
+                    {DEMO_CODE_LINES.map((line, index) => (
+                      visibleLines.includes(index) && (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className={cn(
+                            "leading-tight",
+                            line.type === "error" && "text-red-500",
+                            line.type === "trace" && "text-gray-500",
+                            line.type === "step" && "text-gray-600",
+                            line.type === "success" && "text-emerald-500",
+                            line.type === "link" && "text-primary",
+                            line.type === "empty" && "h-4"
+                          )}
+                        >
+                          {line.text}
+                        </motion.div>
+                      )
+                    ))}
+                  </AnimatePresence>
+                </div>
                 
                 {/* Blinking cursor */}
                 {visibleLines.length === DEMO_CODE_LINES.length && (
