@@ -1,80 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Bug,
-  FileCode,
-  Rocket,
-} from "lucide-react";
 import { toast } from "sonner";
-import { Header } from "@/components/header";
-import { LoadingSteps } from "@/components/loading-steps";
-import { PRResult } from "@/components/pr-result";
-import { AnalysisHistory } from "@/components/analysis-history";
-
-// Types
-interface PRData {
-  prUrl: string;
-  branch: string;
-  summary: string;
-  filePath: string;
-  lineNumber: number;
-  tokensUsed: number;
-}
-
-interface AnalysisRecord {
-  id: string;
-  repo: string;
-  branch: string;
-  prUrl: string;
-  status: "success" | "error";
-  createdAt: Date;
-  summary: string;
-}
-
-type ViewState = "form" | "loading" | "result";
-
-// Mock data for history
-const mockHistory: AnalysisRecord[] = [
-  {
-    id: "1",
-    repo: "acme/api-server",
-    branch: "fix/null-pointer-123",
-    prUrl: "https://github.com/acme/api-server/pull/42",
-    status: "success",
-    createdAt: new Date(Date.now() - 1000 * 60 * 30),
-    summary: "Fixed NullPointerException in UserService.getUser()",
-  },
-  {
-    id: "2",
-    repo: "acme/web-client",
-    branch: "fix/undefined-map-456",
-    prUrl: "https://github.com/acme/web-client/pull/18",
-    status: "success",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
-    summary: "Fixed TypeError: Cannot read property 'map' of undefined",
-  },
-];
+import { Header, Footer } from "@/components/shared";
+import {
+  AnalysisForm,
+  LoadingSteps,
+  PRResult,
+  AnalysisHistory,
+} from "@/components/features/analysis";
+import { MOCK_HISTORY } from "@/constants";
+import type { PRData, AnalysisRecord, AnalysisFormData, ViewState } from "@/types";
 
 export default function DashboardPage() {
   const [viewState, setViewState] = useState<ViewState>("form");
   const [currentStep, setCurrentStep] = useState(0);
   const [prData, setPRData] = useState<PRData | null>(null);
-  const [history, setHistory] = useState<AnalysisRecord[]>(mockHistory);
-  const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState<AnalysisRecord[]>(MOCK_HISTORY);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AnalysisFormData>({
     owner: "",
     repo: "",
     branch: "main",
@@ -154,124 +98,19 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header variant="app" />
 
-      <main className="w-full max-w-6xl mx-auto px-6 py-8">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-[1fr,320px] gap-6">
           {/* Main Content */}
           <div className="space-y-6">
             {viewState === "form" && (
-              <Card className="border-border/50">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                      <Bug className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <CardTitle>Generate Pull Request</CardTitle>
-                      <CardDescription>
-                        Paste your stack trace and let AI fix the bug
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Repository Info */}
-                    <div className="grid sm:grid-cols-3 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="owner" className="text-sm font-medium">
-                          Owner
-                        </Label>
-                        <Input
-                          id="owner"
-                          placeholder="username"
-                          value={formData.owner}
-                          onChange={(e) =>
-                            setFormData({ ...formData, owner: e.target.value })
-                          }
-                          required
-                          className="h-10"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="repo" className="text-sm font-medium">
-                          Repository
-                        </Label>
-                        <Input
-                          id="repo"
-                          placeholder="repository-name"
-                          value={formData.repo}
-                          onChange={(e) =>
-                            setFormData({ ...formData, repo: e.target.value })
-                          }
-                          required
-                          className="h-10"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="branch" className="text-sm font-medium">
-                          Branch
-                        </Label>
-                        <Input
-                          id="branch"
-                          placeholder="main"
-                          value={formData.branch}
-                          onChange={(e) =>
-                            setFormData({ ...formData, branch: e.target.value })
-                          }
-                          required
-                          className="h-10"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Stack Trace */}
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="stackTrace"
-                        className="text-sm font-medium flex items-center gap-2"
-                      >
-                        <FileCode className="h-4 w-4 text-muted-foreground" />
-                        Stack Trace
-                      </Label>
-                      <Textarea
-                        id="stackTrace"
-                        placeholder={`Paste your error stack trace here...
-
-Example:
-Error: Cannot read property 'map' of undefined
-    at UserList.render (src/components/UserList.tsx:24:18)
-    at processChild (node_modules/react-dom/...)
-    at ...`}
-                        value={formData.stackTrace}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            stackTrace: e.target.value,
-                          })
-                        }
-                        required
-                        className="min-h-[240px] code-textarea resize-none"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        The AI will analyze the error and generate a fix
-                        automatically
-                      </p>
-                    </div>
-
-                    {/* Submit Button */}
-                    <Button type="submit" className="w-full h-12 text-base gap-2">
-                      <Rocket className="h-5 w-5" />
-                      Generate Pull Request
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
+              <AnalysisForm
+                formData={formData}
+                onFormDataChange={setFormData}
+                onSubmit={handleSubmit}
+              />
             )}
 
             {viewState === "loading" && (
@@ -291,22 +130,13 @@ Error: Cannot read property 'map' of undefined
           </div>
 
           {/* Sidebar - History */}
-          <div
-            className={`${
-              showHistory ? "block" : "hidden lg:block"
-            } lg:sticky lg:top-24 lg:self-start`}
-          >
+          <div className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
             <AnalysisHistory records={history} />
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border/40 mt-auto">
-        <div className="w-full max-w-6xl mx-auto px-6 py-4 text-center text-sm text-muted-foreground">
-          Made for developers, by developers
-        </div>
-      </footer>
+      <Footer maxWidth="max-w-6xl" />
     </div>
   );
 }

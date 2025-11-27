@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Terminal, Github, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,14 +15,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Terminal, Github, Eye, EyeOff, ArrowRight } from "lucide-react";
-import { toast } from "sonner";
+import { Footer } from "@/components/shared";
+import { ROUTES } from "@/constants";
+import { config } from "@/config";
+import type { AuthFormData } from "@/types";
 
 export default function LoginPage() {
   const router = useRouter();
   const [showToken, setShowToken] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AuthFormData>({
     email: "",
     password: "",
     githubToken: "",
@@ -33,16 +37,14 @@ export default function LoginPage() {
 
     try {
       // TODO: Integrate with backend API
-      // For now, simulate authentication
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
-      // Store token temporarily (will be replaced with proper auth)
       if (formData.githubToken) {
         localStorage.setItem("github_token", formData.githubToken);
       }
       
       toast.success(isRegister ? "Account created successfully!" : "Welcome back!");
-      router.push("/dashboard");
+      router.push(ROUTES.DASHBOARD);
     } catch {
       toast.error("Authentication failed. Please try again.");
     } finally {
@@ -55,7 +57,7 @@ export default function LoginPage() {
       {/* Simple header for login */}
       <header className="border-b border-border/40 bg-card/30 backdrop-blur-sm">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Terminal className="h-5 w-5 text-foreground" />
             <span className="font-semibold">bug-to-pr</span>
           </Link>
@@ -126,7 +128,7 @@ export default function LoginPage() {
                     GitHub Token
                   </Label>
                   <a
-                    href="https://github.com/settings/tokens/new?scopes=repo"
+                    href={config.github.tokenUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-primary hover:underline"
@@ -199,12 +201,7 @@ export default function LoginPage() {
         </Card>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-border/40 py-4">
-        <div className="w-full max-w-6xl mx-auto px-6 text-center text-sm text-muted-foreground">
-          Made for developers, by developers
-        </div>
-      </footer>
+      <Footer maxWidth="max-w-6xl" />
     </div>
   );
 }

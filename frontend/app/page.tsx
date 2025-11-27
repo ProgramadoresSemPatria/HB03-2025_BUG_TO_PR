@@ -3,61 +3,17 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowRight,
-  GitPullRequest,
-  Sparkles,
-  Check,
-  Rocket,
-} from "lucide-react";
+import { ArrowRight, GitPullRequest, Sparkles, Check, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/header";
+import { Header, Footer } from "@/components/shared";
+import { CHANGELOG, DEMO_CODE_LINES, ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
-
-const changelog = [
-  {
-    version: "v0.3.0",
-    date: "Nov 2024",
-    title: "Multi-language Support",
-    description: "Now supports JavaScript, TypeScript, Python, Java, and Go stack traces",
-    type: "feature",
-  },
-  {
-    version: "v0.2.0",
-    date: "Nov 2024",
-    title: "AI-Powered Analysis",
-    description: "Integrated LLM for intelligent bug detection and fix generation",
-    type: "feature",
-  },
-  {
-    version: "v0.1.0",
-    date: "Oct 2024",
-    title: "Initial Release",
-    description: "Basic stack trace parsing and GitHub PR creation",
-    type: "release",
-  },
-];
-
-const codeLines = [
-  { text: "Error: Cannot read property 'map' of undefined", type: "error", delay: 0 },
-  { text: "    at UserList.render (src/components/UserList.tsx:24:18)", type: "trace", delay: 0.1 },
-  { text: "    at processChild (node_modules/react-dom/cjs/...)", type: "trace", delay: 0.2 },
-  { text: "    at resolveChildren (node_modules/react-dom/cjs/...)", type: "trace", delay: 0.3 },
-  { text: "", type: "empty", delay: 0.5 },
-  { text: "✓ Analyzing stack trace...", type: "step", delay: 1.0 },
-  { text: "✓ Found: src/components/UserList.tsx:24", type: "success", delay: 1.5 },
-  { text: "✓ AI generated fix", type: "success", delay: 2.0 },
-  { text: "✓ Created branch: fix/userlist-map-undefined", type: "success", delay: 2.5 },
-  { text: "✓ Pull Request #42 created!", type: "success", delay: 3.0 },
-  { text: "", type: "empty", delay: 3.2 },
-  { text: "→ https://github.com/acme/app/pull/42", type: "link", delay: 3.5 },
-];
 
 export default function Home() {
   const [visibleLines, setVisibleLines] = useState<number[]>([]);
 
   useEffect(() => {
-    codeLines.forEach((line, index) => {
+    DEMO_CODE_LINES.forEach((line, index) => {
       setTimeout(() => {
         setVisibleLines((prev) => [...prev, index]);
       }, line.delay * 1000);
@@ -97,13 +53,13 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/dashboard">
+              <Link href={ROUTES.DASHBOARD}>
                 <Button size="lg" className="h-12 px-8 gap-2 text-base">
                   <Rocket className="h-4 w-4" />
                   Start Fixing Bugs
                 </Button>
               </Link>
-              <Link href="/login">
+              <Link href={ROUTES.LOGIN}>
                 <Button variant="outline" size="lg" className="h-12 px-8 text-base">
                   Create Account
                 </Button>
@@ -136,7 +92,7 @@ export default function Home() {
               {/* Terminal Content */}
               <div className="p-6 font-mono text-sm min-h-[320px]">
                 <AnimatePresence>
-                  {codeLines.map((line, index) => (
+                  {DEMO_CODE_LINES.map((line, index) => (
                     visibleLines.includes(index) && (
                       <motion.div
                         key={index}
@@ -160,7 +116,7 @@ export default function Home() {
                 </AnimatePresence>
                 
                 {/* Blinking cursor */}
-                {visibleLines.length === codeLines.length && (
+                {visibleLines.length === DEMO_CODE_LINES.length && (
                   <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: [0, 1, 0] }}
@@ -184,7 +140,7 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-12">Changelog</h2>
 
             <div className="space-y-0">
-              {changelog.map((item, index) => (
+              {CHANGELOG.map((item, index) => (
                 <motion.div
                   key={item.version}
                   initial={{ opacity: 0, x: -20 }}
@@ -194,7 +150,7 @@ export default function Home() {
                   className="group relative"
                 >
                   {/* Timeline line */}
-                  {index < changelog.length - 1 && (
+                  {index < CHANGELOG.length - 1 && (
                     <div className="absolute left-[15px] top-10 w-px h-[calc(100%-16px)] bg-border/50" />
                   )}
 
@@ -252,7 +208,7 @@ export default function Home() {
             <p className="text-lg text-muted-foreground mb-8 max-w-lg mx-auto">
               Stop wasting time debugging. Let AI create Pull Requests for you.
             </p>
-            <Link href="/dashboard">
+            <Link href={ROUTES.DASHBOARD}>
               <Button size="lg" className="h-12 px-8 text-base gap-2">
                 Get Started
                 <ArrowRight className="h-4 w-4" />
@@ -262,14 +218,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-border/30 py-8">
-        <div className="w-full max-w-5xl mx-auto px-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            Made for developers, by developers
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

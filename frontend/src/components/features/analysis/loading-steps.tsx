@@ -18,6 +18,7 @@ import {
   Loader2,
   Circle,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LoadingStepsProps {
   currentStep: number;
@@ -92,27 +93,28 @@ export function LoadingSteps({ currentStep, repoInfo }: LoadingStepsProps) {
             const StepIcon = step.icon;
             const isCompleted = currentStep > step.id;
             const isActive = currentStep === step.id;
-            const isPending = currentStep < step.id;
 
             return (
               <div key={step.id}>
                 <div
-                  className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 ${
+                  className={cn(
+                    "flex items-center gap-4 p-3 rounded-lg transition-all duration-300",
                     isActive
                       ? "bg-primary/10 border border-primary/20"
                       : isCompleted
                       ? "bg-success/5"
                       : "opacity-50"
-                  }`}
+                  )}
                 >
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-lg transition-all ${
+                    className={cn(
+                      "flex h-10 w-10 items-center justify-center rounded-lg transition-all",
                       isCompleted
                         ? "bg-success/20 text-success"
                         : isActive
                         ? "bg-primary/20 text-primary"
                         : "bg-muted text-muted-foreground"
-                    }`}
+                    )}
                   >
                     {isCompleted ? (
                       <CheckCircle2 className="h-5 w-5" />
@@ -125,13 +127,14 @@ export function LoadingSteps({ currentStep, repoInfo }: LoadingStepsProps) {
 
                   <div className="flex-1 min-w-0">
                     <p
-                      className={`text-sm font-medium ${
+                      className={cn(
+                        "text-sm font-medium",
                         isCompleted
                           ? "text-success"
                           : isActive
                           ? "text-foreground"
                           : "text-muted-foreground"
-                      }`}
+                      )}
                     >
                       {step.title}
                     </p>
@@ -153,9 +156,10 @@ export function LoadingSteps({ currentStep, repoInfo }: LoadingStepsProps) {
                 {index < steps.length - 1 && (
                   <div className="ml-8 h-2 flex items-center">
                     <div
-                      className={`w-0.5 h-full transition-colors ${
+                      className={cn(
+                        "w-0.5 h-full transition-colors",
                         currentStep > step.id ? "bg-success/40" : "bg-border"
-                      }`}
+                      )}
                     />
                   </div>
                 )}

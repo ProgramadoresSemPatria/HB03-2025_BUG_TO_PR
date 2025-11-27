@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,17 +22,8 @@ import {
   Copy,
   Check,
 } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
-
-interface PRData {
-  prUrl: string;
-  branch: string;
-  summary: string;
-  filePath: string;
-  lineNumber: number;
-  tokensUsed: number;
-}
+import type { PRData } from "@/types";
 
 interface PRResultProps {
   data: PRData;

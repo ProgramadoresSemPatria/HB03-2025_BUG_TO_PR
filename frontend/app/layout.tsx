@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
+import { config } from "@/config";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bug to PR | Automated Bug Fixes",
-  description: "Transform stack traces into Pull Requests automatically with AI",
+  title: `${config.appName} | Automated Bug Fixes`,
+  description: config.appDescription,
 };
 
 export default function RootLayout({

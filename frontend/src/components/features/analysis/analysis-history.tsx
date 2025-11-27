@@ -15,29 +15,11 @@ import {
   ExternalLink,
   Clock,
 } from "lucide-react";
-
-interface AnalysisRecord {
-  id: string;
-  repo: string;
-  branch: string;
-  prUrl: string;
-  status: "success" | "error";
-  createdAt: Date;
-  summary: string;
-}
+import { formatTimeAgo } from "@/lib/utils";
+import type { AnalysisRecord } from "@/types";
 
 interface AnalysisHistoryProps {
   records: AnalysisRecord[];
-}
-
-function formatTimeAgo(date: Date): string {
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-  if (diffInSeconds < 60) return "Just now";
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-  return `${Math.floor(diffInSeconds / 86400)}d ago`;
 }
 
 export function AnalysisHistory({ records }: AnalysisHistoryProps) {
