@@ -61,7 +61,7 @@ export default function Home() {
           </div>
           
           {/* Conteúdo da Hero */}
-          <div className="relative z-20 w-full max-w-6xl mx-auto px-6 pt-24 pb-20">
+          <div className="relative z-20 w-full max-w-6xl mx-auto px-6 pt-32 pb-20">
           {/* Floating cards */}
           <motion.div
             style={{ x, y }}
@@ -112,19 +112,19 @@ export default function Home() {
           >
             {/* Badge */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 backdrop-blur-sm mb-8"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 mb-2"
             >
-              <Zap className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                AI-Powered Bug Fixing
+              <Zap className="h-3.5 w-3.5 text-white" />
+              <span className="text-xs font-medium text-white/90 uppercase tracking-wider">
+                Automated Bug Fixes
               </span>
             </motion.div>
 
             {/* Main Title with gradient */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl tracking-tight mb-8 leading-[1.05]" style={{ fontFamily: '"Lyondisplay App", Georgia, serif', fontWeight: 300 }}>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl tracking-tight mb-6 leading-[1.05]" style={{ fontFamily: '"Lyondisplay App", Georgia, serif', fontWeight: 300 }}>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -177,7 +177,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="text-lg sm:text-xl text-white max-w-2xl mx-auto mb-12 leading-relaxed"
+              className="text-lg sm:text-xl text-white max-w-2xl mx-auto mb-10 leading-relaxed"
               style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
             >
               Paste your error, let AI fix it, get a PR.{" "}
