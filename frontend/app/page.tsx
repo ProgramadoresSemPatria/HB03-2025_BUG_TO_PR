@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { ArrowRight, GitPullRequest, Sparkles, Check, Rocket, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Check, Rocket, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Header, Footer } from "@/components/shared";
+import { VideoBackground } from "@/components/features/hero";
 import { CHANGELOG, DEMO_CODE_LINES, ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
 
@@ -49,52 +50,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
-        
-        {/* Animated orbs */}
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-chart-2/10 rounded-full blur-3xl"
-          animate={{
-            x: [0, -50, 0],
-            y: [0, -30, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255,255,255)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
-          }}
-        />
-      </div>
-
       <Header variant="landing" />
 
       {/* Hero Section */}
       <main className="relative z-10">
-        <section className="w-full max-w-6xl mx-auto px-6 pt-24 pb-20">
+        <section className="relative w-full min-h-screen overflow-hidden">
+          {/* Video background - apenas na hero */}
+          <div className="absolute inset-0">
+            <VideoBackground />
+          </div>
+          
+          {/* Conteúdo da Hero */}
+          <div className="relative z-20 w-full max-w-6xl mx-auto px-6 pt-24 pb-20">
           {/* Floating cards */}
           <motion.div
             style={{ x, y }}
@@ -157,7 +124,7 @@ export default function Home() {
             </motion.div>
 
             {/* Main Title with gradient */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-8 leading-[1.05]">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl tracking-tight mb-8 leading-[1.05]" style={{ fontFamily: '"Lyondisplay App", Georgia, serif', fontWeight: 300 }}>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -211,6 +178,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
               className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
+              style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
             >
               Paste your error, let AI fix it, get a PR.{" "}
               <span className="text-foreground/80 font-medium">That simple.</span>
@@ -320,6 +288,7 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
+          </div>
         </section>
 
         {/* Changelog Section */}

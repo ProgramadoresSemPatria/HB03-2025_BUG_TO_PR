@@ -74,7 +74,7 @@ export function Header({ variant = "landing" }: HeaderProps) {
           borderBottomWidth: scrolled ? 1 : 0,
         }}
         transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
-        className="absolute inset-0 bg-card/80 backdrop-blur-md shadow-sm border-b border-border/40 pointer-events-none"
+        className="absolute inset-0 bg-card/10 backdrop-blur-md shadow-sm border-b border-border/10 pointer-events-none"
       />
       
       {/* Content container */}
@@ -115,7 +115,7 @@ export function Header({ variant = "landing" }: HeaderProps) {
             pointerEvents: scrolled ? "none" : "auto",
           }}
           transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
-          className="absolute inset-0 flex items-center justify-between rounded-lg bg-card/60 backdrop-blur-md border border-border/40"
+          className="absolute inset-0 flex items-center justify-between rounded-lg bg-card/10 backdrop-blur-md border border-border/10"
         />
         
         {/* Content - sempre visível */}
