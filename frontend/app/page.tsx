@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { ArrowRight, Sparkles, Check, Rocket, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Check, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Header, Footer } from "@/components/shared";
 import { VideoBackground } from "@/components/features/hero";
@@ -177,7 +177,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="text-lg sm:text-xl text-white max-w-2xl mx-auto mb-10 leading-relaxed"
+              className="text-lg sm:text-xl text-white max-w-2xl mx-auto mb-10 leading-relaxed tracking-tight"
               style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
             >
               Paste your error, let AI fix it, get a PR.{" "}
@@ -196,9 +196,8 @@ export default function Home() {
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-primary/60 to-primary rounded-lg blur-md opacity-40 group-hover:opacity-60 transition-opacity" />
                   <Button 
                     size="lg" 
-                    className="relative h-12 px-8 gap-2 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-200 bg-white text-black hover:bg-white/90 cursor-pointer uppercase"
+                    className="relative h-12 px-8 gap-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200 bg-white text-black hover:bg-white/90 cursor-pointer uppercase tracking-normal"
                   >
-                    <Rocket className="h-5 w-5" />
                     Start Fixing Bugs
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </Button>
@@ -208,7 +207,7 @@ export default function Home() {
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="h-12 px-8 text-base font-medium border-white/30 backdrop-blur-sm bg-white/20 hover:bg-white/30 text-white hover:text-white transition-all duration-200 cursor-pointer uppercase"
+                    className="h-12 px-8 text-sm font-medium !border-white/40 !text-white !bg-white/10 backdrop-blur-md dark:!bg-white/10 dark:!border-white/40 hover:!bg-white/20 hover:!text-white hover:!border-white/60 transition-all duration-200 cursor-pointer uppercase tracking-normal"
                   >
                     Create Account
                   </Button>
