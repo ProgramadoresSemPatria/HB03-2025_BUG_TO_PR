@@ -195,20 +195,20 @@ export default function Home() {
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-primary/60 to-primary rounded-lg blur-md opacity-40 group-hover:opacity-60 transition-opacity" />
                   <Button 
-                    size="default" 
-                    className="relative h-10 px-6 gap-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200 bg-white text-black hover:bg-white/90 cursor-pointer uppercase"
+                    size="lg" 
+                    className="relative h-12 px-8 gap-2 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-200 bg-white text-black hover:bg-white/90 cursor-pointer uppercase"
                   >
-                    <Rocket className="h-4 w-4" />
+                    <Rocket className="h-5 w-5" />
                     Start Fixing Bugs
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </Button>
                 </div>
               </Link>
               <Link href={ROUTES.LOGIN} className="cursor-pointer">
                   <Button 
                     variant="outline" 
-                    size="default" 
-                    className="h-10 px-6 text-sm font-medium border-white/30 backdrop-blur-sm bg-white/20 hover:bg-white/30 text-white hover:text-white transition-all duration-200 cursor-pointer uppercase"
+                    size="lg" 
+                    className="h-12 px-8 text-base font-medium border-white/30 backdrop-blur-sm bg-white/20 hover:bg-white/30 text-white hover:text-white transition-all duration-200 cursor-pointer uppercase"
                   >
                     Create Account
                   </Button>
