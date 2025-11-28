@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { LogOut, History } from "lucide-react";
+import { LogOut, History, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScroll } from "@/hooks";
 import { ROUTES } from "@/constants";
@@ -22,29 +22,48 @@ export function Header({ variant = "landing" }: HeaderProps) {
 
   useEffect(() => {
     const ensureGifLoop = (img: HTMLImageElement | null) => {
-      if (!img) return;
+      if (!img) return () => {};
+      
+      // Configurar o GIF para fazer loop infinito
+      img.style.imageRendering = "auto";
+      img.style.display = "block";
       
       const restartGif = () => {
+        if (!img.complete) return;
+        
         const src = img.src;
+        // Ocultar brevemente durante o restart para evitar flash do alt text
+        img.style.visibility = "hidden";
         img.src = "";
-        setTimeout(() => {
+        
+        requestAnimationFrame(() => {
           img.src = src;
-        }, 10);
+          img.style.visibility = "visible";
+        });
       };
 
       img.addEventListener("load", () => {
         img.style.imageRendering = "auto";
+        img.style.visibility = "visible";
       });
 
-      setInterval(() => {
-        if (img.complete) {
+      // Reiniciar o GIF antes que ele termine completamente
+      const intervalId = setInterval(() => {
+        if (img.complete && img.naturalWidth > 0) {
           restartGif();
         }
-      }, 5000);
+      }, 2000); // Reiniciar a cada 2 segundos para evitar que o GIF pare
+      
+      return () => clearInterval(intervalId);
     };
 
-    ensureGifLoop(logoRef1.current);
-    ensureGifLoop(logoRef2.current);
+    const cleanup1 = ensureGifLoop(logoRef1.current);
+    const cleanup2 = ensureGifLoop(logoRef2.current);
+    
+    return () => {
+      cleanup1();
+      cleanup2();
+    };
   }, []);
 
   if (variant === "app") {
@@ -53,9 +72,10 @@ export function Header({ variant = "landing" }: HeaderProps) {
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity -ml-4 sm:-ml-6">
             <img
-              src="/logo-animated.gif"
-              alt="Logo"
-              className="h-24 w-24 sm:h-32 sm:w-32 lg:h-40 lg:w-40 object-contain"
+              ref={logoRef1}
+              src="/logo.gif"
+              alt=""
+              className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 object-contain"
               style={{ imageRendering: "auto" }}
             />
           </Link>
@@ -165,9 +185,10 @@ export function Header({ variant = "landing" }: HeaderProps) {
         <div className="relative flex items-center justify-between h-full">
           <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity -ml-4 sm:-ml-6">
             <img
-              src="/logo-animated.gif"
-              alt="Logo"
-              className="h-24 w-24 sm:h-32 sm:w-32 lg:h-40 lg:w-40 object-contain"
+              ref={logoRef2}
+              src="/logo.gif"
+              alt=""
+              className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 object-contain"
               style={{ imageRendering: "auto" }}
             />
           </Link>
