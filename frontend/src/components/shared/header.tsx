@@ -62,7 +62,6 @@ export function Header({ variant = "landing" }: HeaderProps) {
       transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
       className="fixed left-0 right-0 z-50"
     >
-      {/* Background layer - aparece quando scrolled */}
       <motion.div
         initial={{
           opacity: scrolled ? 1 : 0,
@@ -76,7 +75,6 @@ export function Header({ variant = "landing" }: HeaderProps) {
         className="absolute inset-0 bg-card/5 backdrop-blur-md shadow-sm border-b border-border/10 pointer-events-none"
       />
       
-      {/* Content container */}
       <motion.div
         initial={{
           height: scrolled ? 64 : 56,
@@ -91,7 +89,6 @@ export function Header({ variant = "landing" }: HeaderProps) {
         transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
         className="relative w-full max-w-6xl mx-auto px-6"
       >
-        {/* Inner container - desaparece quando scrolled */}
         <motion.div
           initial={{
             borderRadius: scrolled ? 0 : 8,
@@ -117,7 +114,6 @@ export function Header({ variant = "landing" }: HeaderProps) {
           className="absolute inset-0 flex items-center justify-between rounded-lg bg-card/5 backdrop-blur-md border border-border/10"
         />
         
-        {/* Content - sempre visível */}
         <div className="relative flex items-center justify-between h-full">
           <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
             <Terminal className="h-5 w-5 text-foreground" />

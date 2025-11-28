@@ -54,7 +54,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Simple header for login */}
       <header className="border-b border-border/40 bg-background">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center">
           <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
