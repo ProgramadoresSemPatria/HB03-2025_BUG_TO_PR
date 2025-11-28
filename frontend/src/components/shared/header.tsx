@@ -35,8 +35,21 @@ export function Header({ variant = "landing" }: HeaderProps) {
                   pathname === ROUTES.DASHBOARD && "bg-muted"
                 )}
               >
-                <History className="h-4 w-4" />
+                <Terminal className="h-4 w-4" />
                 <span className="hidden sm:inline">Dashboard</span>
+              </Button>
+            </Link>
+            <Link href={ROUTES.HISTORY}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "gap-2",
+                  pathname === ROUTES.HISTORY && "bg-muted"
+                )}
+              >
+                <History className="h-4 w-4" />
+                <span className="hidden sm:inline">History</span>
               </Button>
             </Link>
             <Link href={ROUTES.LOGIN}>

@@ -152,7 +152,6 @@ export function LoadingSteps({ currentStep, repoInfo }: LoadingStepsProps) {
                   )}
                 </div>
 
-                {/* Connector line */}
                 {index < steps.length - 1 && (
                   <div className="ml-8 h-2 flex items-center">
                     <div
@@ -168,7 +167,6 @@ export function LoadingSteps({ currentStep, repoInfo }: LoadingStepsProps) {
           })}
         </div>
 
-        {/* Progress bar */}
         <div className="mt-6 pt-4 border-t border-border/50">
           <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
             <span>Progress</span>

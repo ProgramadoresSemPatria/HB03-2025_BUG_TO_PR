@@ -19,7 +19,6 @@ export function VideoBackground({
     const video = videoRef.current;
     if (!video) return;
 
-    // Tentar fazer play
     const playPromise = video.play();
     if (playPromise !== undefined) {
       playPromise.catch((error) => {
