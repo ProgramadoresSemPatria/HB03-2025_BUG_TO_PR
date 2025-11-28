@@ -2,7 +2,7 @@
 
 import { Header, Footer } from "@/components/shared";
 import { VideoBackground } from "@/components/features/hero";
-import { HeroContent, TerminalPreview, ChangelogSection, CTASection, FloatingCards } from "@/components/features/home";
+import { HeroContent, TerminalPreview, ChangelogSection, CTASection, FloatingCards, PhoneAnimationSection } from "@/components/features/home";
 
 export default function Home() {
   return (
@@ -25,6 +25,7 @@ export default function Home() {
           </div>
         </section>
 
+        <PhoneAnimationSection />
         <ChangelogSection />
         <CTASection />
       </main>
