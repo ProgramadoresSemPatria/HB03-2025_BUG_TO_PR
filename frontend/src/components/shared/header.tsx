@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Terminal, LogOut, History } from "lucide-react";
+import { LogOut, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScroll } from "@/hooks";
 import { ROUTES } from "@/constants";
@@ -16,13 +17,47 @@ interface HeaderProps {
 export function Header({ variant = "landing" }: HeaderProps) {
   const { scrolled, isMounted } = useScroll({ threshold: 20 });
   const pathname = usePathname();
+  const logoRef1 = useRef<HTMLImageElement>(null);
+  const logoRef2 = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const ensureGifLoop = (img: HTMLImageElement | null) => {
+      if (!img) return;
+      
+      const restartGif = () => {
+        const src = img.src;
+        img.src = "";
+        setTimeout(() => {
+          img.src = src;
+        }, 10);
+      };
+
+      img.addEventListener("load", () => {
+        img.style.imageRendering = "auto";
+      });
+
+      setInterval(() => {
+        if (img.complete) {
+          restartGif();
+        }
+      }, 5000);
+    };
+
+    ensureGifLoop(logoRef1.current);
+    ensureGifLoop(logoRef2.current);
+  }, []);
 
   if (variant === "app") {
     return (
       <header className="border-b border-border/40 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
-            <Terminal className="h-5 w-5 text-foreground" />
+          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity -ml-4 sm:-ml-6">
+            <img
+              src="/logo-animated.gif"
+              alt="Logo"
+              className="h-24 w-24 sm:h-32 sm:w-32 lg:h-40 lg:w-40 object-contain"
+              style={{ imageRendering: "auto" }}
+            />
           </Link>
 
           <div className="flex items-center gap-2">
@@ -115,8 +150,13 @@ export function Header({ variant = "landing" }: HeaderProps) {
         />
         
         <div className="relative flex items-center justify-between h-full">
-          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
-            <Terminal className="h-5 w-5 text-foreground" />
+          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity -ml-4 sm:-ml-6">
+            <img
+              src="/logo-animated.gif"
+              alt="Logo"
+              className="h-24 w-24 sm:h-32 sm:w-32 lg:h-40 lg:w-40 object-contain"
+              style={{ imageRendering: "auto" }}
+            />
           </Link>
 
           <motion.nav
