@@ -25,7 +25,10 @@ export default function Home() {
           </div>
         </section>
 
-        <PhoneAnimationSection />
+        <PhoneAnimationSection 
+          firstImage="/images/code-review.png"
+          secondImage="/images/pull-request.png"
+        />
         <ChangelogSection />
         <CTASection />
       </main>

@@ -9,8 +9,8 @@ interface PhoneAnimationSectionProps {
 }
 
 export function PhoneAnimationSection({ 
-  firstImage = "/images/IMG_7507.png",
-  secondImage = "/images/IMG_7507.png" 
+  firstImage = "/images/code-review.png",
+  secondImage = "/images/pull-request.png" 
 }: PhoneAnimationSectionProps) {
   const phoneRef = useRef<HTMLDivElement>(null);
   const screenContainerRef = useRef<HTMLDivElement>(null);
@@ -121,16 +121,17 @@ export function PhoneAnimationSection({
             }}
           >
              <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-950 rounded-[2.5rem] p-[6px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-               <div className="w-full h-full rounded-[2rem] overflow-hidden relative bg-black">
+               <div className="w-full h-full rounded-[2rem] overflow-hidden relative">
                  <div
                    ref={screenContainerRef}
                    className="absolute inset-0 w-full h-full"
                    style={{
                      height: "200%",
+                     backgroundColor: "#000",
                    }}
                  >
                    <div
-                     className="absolute top-0 left-0 w-full h-full"
+                     className="absolute top-0 left-0 w-full h-full z-10"
                      style={{
                        height: "50%",
                        backgroundImage: `url('${firstImage}')`,
@@ -140,7 +141,7 @@ export function PhoneAnimationSection({
                      }}
                    />
                    <div
-                     className="absolute top-[50%] left-0 w-full h-full"
+                     className="absolute top-[50%] left-0 w-full h-full z-10"
                      style={{
                        height: "50%",
                        backgroundImage: `url('${secondImage}')`,
