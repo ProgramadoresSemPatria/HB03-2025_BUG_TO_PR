@@ -7,14 +7,27 @@ import { cn } from "@/lib/utils";
 
 export function ChangelogSection() {
   return (
-    <section id="changelog" className="w-full max-w-5xl mx-auto px-6 py-24">
+    <section id="changelog" className="w-full max-w-6xl mx-auto px-6 py-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="text-3xl font-bold mb-12">Changelog</h2>
+        <div className="text-center mb-16">
+          <h2 
+            className="text-4xl sm:text-5xl lg:text-6xl tracking-tight mb-4 leading-tight"
+            style={{ fontFamily: '"Lyondisplay App", Georgia, serif', fontWeight: 300 }}
+          >
+            Changelog
+          </h2>
+          <p 
+            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto"
+            style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
+          >
+            See what&apos;s new and what we&apos;ve been building
+          </p>
+        </div>
 
         <div className="space-y-0">
           {CHANGELOG.map((item, index) => (
@@ -27,10 +40,10 @@ export function ChangelogSection() {
               className="group relative"
             >
               {index < CHANGELOG.length - 1 && (
-                <div className="absolute left-[15px] top-10 w-px h-[calc(100%-16px)] bg-border/50" />
+                <div className="absolute left-[15px] top-12 w-px h-[calc(100%-24px)] bg-border/30" />
               )}
 
-              <div className="flex gap-6 py-6 hover:bg-muted/10 rounded-lg px-2 -mx-2 transition-colors">
+              <div className="flex gap-6 py-8 hover:bg-muted/5 rounded-lg px-4 -mx-4 transition-colors">
                 <div className={cn(
                   "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
                   item.type === "feature" 
@@ -45,18 +58,27 @@ export function ChangelogSection() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-3 mb-2">
-                    <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded-md">
+                  <div className="flex flex-wrap items-center gap-3 mb-3">
+                    <span className="text-xs font-mono text-primary bg-primary/10 px-2.5 py-1 rounded-md uppercase tracking-wider">
                       {item.version}
                     </span>
-                    <span className="text-sm text-muted-foreground">
+                    <span 
+                      className="text-sm text-muted-foreground"
+                      style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
+                    >
                       {item.date}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
+                  <h3 
+                    className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors"
+                    style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 400 }}
+                  >
                     {item.title}
                   </h3>
-                  <p className="text-muted-foreground">
+                  <p 
+                    className="text-muted-foreground leading-relaxed"
+                    style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
+                  >
                     {item.description}
                   </p>
                 </div>
