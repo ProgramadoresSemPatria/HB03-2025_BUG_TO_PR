@@ -2,7 +2,7 @@
 
 import { Header, Footer } from "@/components/shared";
 import { VideoBackground } from "@/components/features/hero";
-import { HeroContent, TerminalPreview, ChangelogSection, CTASection, FloatingCards, PhoneAnimationSection } from "@/components/features/home";
+import { HeroContent, TerminalPreview, ChangelogSection, CTASection, FloatingCards, PhoneAnimationSection, FAQSection } from "@/components/features/home";
 
 export default function Home() {
   return (
@@ -30,6 +30,7 @@ export default function Home() {
           secondImage="/images/pull-request.png"
         />
         <ChangelogSection />
+        <FAQSection />
         <CTASection />
       </main>
 

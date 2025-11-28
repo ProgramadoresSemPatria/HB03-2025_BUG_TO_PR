@@ -4,4 +4,5 @@ export { ChangelogSection } from "./changelog-section";
 export { CTASection } from "./cta-section";
 export { FloatingCards } from "./floating-cards";
 export { PhoneAnimationSection } from "./phone-animation-section";
+export { FAQSection } from "./faq-section";
 
