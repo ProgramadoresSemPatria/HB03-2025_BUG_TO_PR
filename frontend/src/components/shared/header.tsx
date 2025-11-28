@@ -21,9 +21,8 @@ export function Header({ variant = "landing" }: HeaderProps) {
     return (
       <header className="border-b border-border/40 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
             <Terminal className="h-5 w-5 text-foreground" />
-            <span className="font-semibold">bug-to-pr</span>
           </Link>
 
           <div className="flex items-center gap-2">
