@@ -131,7 +131,42 @@ export function Header({ variant = "landing" }: HeaderProps) {
             transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
             className="hidden sm:flex items-center absolute left-1/2 -translate-x-1/2"
           >
-            <a href="#changelog" className="inline-flex items-center gap-2 h-8 px-4 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 text-xs font-medium text-white/90 uppercase tracking-normal hover:bg-white/20 transition-colors">
+            <a 
+              href="#changelog"
+              onClick={(e) => {
+                e.preventDefault();
+                const element = document.getElementById("changelog");
+                if (element) {
+                  const headerHeight = 80;
+                  const startPosition = window.pageYOffset;
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                  const targetPosition = elementPosition - headerHeight;
+                  const distance = targetPosition - startPosition;
+                  const duration = 1800;
+                  let start: number | null = null;
+
+                  const easeInOutCubic = (t: number): number => {
+                    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                  };
+
+                  const animateScroll = (timestamp: number) => {
+                    if (!start) start = timestamp;
+                    const progress = timestamp - start;
+                    const progressRatio = Math.min(progress / duration, 1);
+                    const easedProgress = easeInOutCubic(progressRatio);
+                    
+                    window.scrollTo(0, startPosition + distance * easedProgress);
+                    
+                    if (progress < duration) {
+                      requestAnimationFrame(animateScroll);
+                    }
+                  };
+
+                  requestAnimationFrame(animateScroll);
+                }
+              }}
+              className="inline-flex items-center gap-2 h-8 px-4 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 text-xs font-medium text-white/90 uppercase tracking-normal hover:bg-white/20 transition-colors"
+            >
               Changelog
             </a>
           </motion.nav>
