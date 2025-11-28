@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -29,7 +30,6 @@ export function useScroll({ threshold = 20 }: UseScrollOptions = {}) {
       setScrolled(currentScrollY > threshold);
     };
 
-    // Check initial scroll position
     handleScroll();
     
     window.addEventListener("scroll", handleScroll, { passive: true });

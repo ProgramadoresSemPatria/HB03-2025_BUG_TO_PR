@@ -1,4 +1,4 @@
-import { CreateSessionUserDto, CreateUserDto, CreateUserResponseDto, GetMeResponseDto } from "../dto/auth-dto";
+import { CreateSessionUserDto, CreateUserDto, CreateUserResponseDto, GetMeResponseDto, GetUserWithTokenDto } from "../dto/auth-dto";
 
 export interface IAuthContract {
   createUser: ({
@@ -9,4 +9,5 @@ export interface IAuthContract {
   getUserByEmail: (email: string) => Promise<CreateSessionUserDto | null>;
   getUserById: (id: string) => Promise<GetMeResponseDto | null>;
   getMe: (userId: string) => Promise<GetMeResponseDto | null>;
+  getUserWithToken: (userId: string) => Promise<GetUserWithTokenDto | null>;
 }

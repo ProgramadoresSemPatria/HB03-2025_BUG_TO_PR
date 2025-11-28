@@ -34,7 +34,6 @@ export function useAnalysis(initialHistory: AnalysisRecord[] = []): UseAnalysisR
 
       setPRData(result);
 
-      // Add to history
       const newRecord: AnalysisRecord = {
         id: Date.now().toString(),
         repo: `${formData.owner}/${formData.repo}`,

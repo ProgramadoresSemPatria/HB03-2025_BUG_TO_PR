@@ -11,12 +11,35 @@ datasource db {
 }
 
 model User {
-  id                        String   @id @default(uuid())
-  email                     String   @unique
-  passwordHash              String   @map("password_hash")
-  githubPersonalAccessToken String   @unique @map("github_personal_access_token")
-  createdAt                 DateTime @default(now()) @map("created_at")
-  updatedAt                 DateTime @updatedAt @map("updated_at")
+  id                        String        @id @default(uuid())
+  email                     String        @unique
+  passwordHash              String        @map("password_hash")
+  githubPersonalAccessToken String?       @unique @map("github_personal_access_token")
+  createdAt                 DateTime      @default(now()) @map("created_at")
+  updatedAt                 DateTime      @updatedAt @map("updated_at")
+  generatedPRs              GeneratedPR[]
 
   @@map("users")
+}
+
+model GeneratedPR {
+  id            String   @id @default(uuid())
+  userId        String?  @map("user_id")
+  status        String   @default("pending") // pending, success, failed
+  branch        String
+  prUrl         String?  @map("pr_url")
+  bugSummary    String   @map("bug_summary")
+  aiSummary     String?  @map("ai_summary")
+  stackTrace    String   @map("stack_trace")
+  owner         String
+  repo          String
+  baseBranch    String   @map("base_branch")
+  filePath      String   @map("file_path")
+  lineNumber    Int      @map("line_number")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("generated_prs")
 }
