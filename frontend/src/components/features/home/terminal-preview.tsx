@@ -23,10 +23,10 @@ export function TerminalPreview() {
       transition={{ duration: 1, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
       className="mt-20 w-full relative"
     >
-      <div className="relative rounded-xl border border-gray-300 bg-white overflow-hidden shadow-lg">
+      <div className="relative rounded-xl border border-gray-300 bg-gray-100 overflow-hidden shadow-lg">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/[0.02] via-transparent to-gray-900/[0.04] pointer-events-none z-10" />
         
-        <div className="relative z-20 flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-gray-50/30">
+        <div className="relative z-20 flex items-center justify-between px-5 py-3.5 border-b border-gray-200 bg-gray-100/50">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
@@ -39,7 +39,7 @@ export function TerminalPreview() {
           </div>
         </div>
 
-        <div className="relative z-20 p-8 font-mono text-sm min-h-[320px] bg-white">
+        <div className="relative z-20 p-8 font-mono text-sm min-h-[320px] bg-gray-100">
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,_rgba(0,0,0,0.015)_0%,_transparent_50%,_rgba(0,0,0,0.015)_100%)] pointer-events-none z-0" />
           
           <div className="relative z-10 space-y-1">
