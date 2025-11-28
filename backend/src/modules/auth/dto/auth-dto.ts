@@ -31,3 +31,8 @@ export interface CreateSessionResponseDto {
 export interface GetMeResponseDto {
     id: string;
 }
+
+export interface GetUserWithTokenDto {
+    id: string;
+    githubPersonalAccessToken: string | null;
+}
