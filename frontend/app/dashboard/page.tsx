@@ -1,82 +1,61 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { toast } from "sonner";
 import { Header, Footer } from "@/components/shared";
+import { AuthGuard } from "@/components/shared/auth-guard";
 import {
   AnalysisForm,
   LoadingSteps,
   PRResult,
-  AnalysisHistory,
 } from "@/components/features/analysis";
-import { MOCK_HISTORY } from "@/constants";
-import type { PRData, AnalysisRecord, AnalysisFormData, ViewState } from "@/types";
+import { analysisService } from "@/services/analysis";
+import { generatePRSchema } from "@/validators/analysis.validator";
+import type { PRData, AnalysisFormData, ViewState } from "@/types";
 
 export default function DashboardPage() {
   const [viewState, setViewState] = useState<ViewState>("form");
   const [currentStep, setCurrentStep] = useState(0);
   const [prData, setPRData] = useState<PRData | null>(null);
-  const [history, setHistory] = useState<AnalysisRecord[]>(MOCK_HISTORY);
 
   const [formData, setFormData] = useState<AnalysisFormData>({
     owner: "",
     repo: "",
     branch: "main",
     stackTrace: "",
+    aiProvider: undefined,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.stackTrace.trim()) {
-      toast.error("Please paste a stack trace");
+    const validationResult = generatePRSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      const firstError = validationResult.error.issues[0];
+      toast.error(firstError.message);
       return;
     }
+
 
     setViewState("loading");
     setCurrentStep(0);
 
-    // Simulate the process with steps
-    const steps = [
-      { delay: 1500, step: 1 },
-      { delay: 2000, step: 2 },
-      { delay: 2500, step: 3 },
-      { delay: 1500, step: 4 },
-      { delay: 2000, step: 5 },
-    ];
+    try {
+      const result = await analysisService.analyze(formData, (step) => {
+        setCurrentStep(step);
+      });
 
-    for (const { delay, step } of steps) {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      setCurrentStep(step);
+      setPRData(result);
+      setViewState("result");
+      toast.success("Pull Request created successfully!");
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to generate PR. Please try again.";
+      toast.error(errorMessage);
+      setViewState("form");
+      setCurrentStep(0);
     }
-
-    // Simulate result
-    const mockResult: PRData = {
-      prUrl: `https://github.com/${formData.owner}/${formData.repo}/pull/42`,
-      branch: `fix/bug-${Date.now().toString(36)}`,
-      summary:
-        "Fixed NullPointerException caused by uninitialized variable in the authentication flow. The error occurred when processing user sessions without valid tokens.",
-      filePath: "src/services/AuthService.java",
-      lineNumber: 127,
-      tokensUsed: 1847,
-    };
-
-    setPRData(mockResult);
-
-    // Add to history
-    const newRecord: AnalysisRecord = {
-      id: Date.now().toString(),
-      repo: `${formData.owner}/${formData.repo}`,
-      branch: mockResult.branch,
-      prUrl: mockResult.prUrl,
-      status: "success",
-      createdAt: new Date(),
-      summary: mockResult.summary,
-    };
-    setHistory((prev) => [newRecord, ...prev]);
-
-    setViewState("result");
-    toast.success("Pull Request created successfully!");
   };
 
   const handleReset = () => {
@@ -88,6 +67,7 @@ export default function DashboardPage() {
       repo: "",
       branch: "main",
       stackTrace: "",
+      aiProvider: undefined,
     });
   };
 
@@ -98,12 +78,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header variant="app" />
+    <AuthGuard>
+      <div className="min-h-screen bg-background flex flex-col">
+        <Header variant="app" />
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-[1fr,320px] gap-6">
-          {/* Main Content */}
+        <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-8">
           <div className="space-y-6">
             {viewState === "form" && (
               <AnalysisForm
@@ -128,15 +107,10 @@ export default function DashboardPage() {
               />
             )}
           </div>
+        </main>
 
-          {/* Sidebar - History */}
-          <div className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
-            <AnalysisHistory records={history} />
-          </div>
-        </div>
-      </main>
-
-      <Footer maxWidth="max-w-6xl" />
-    </div>
+        <Footer maxWidth="max-w-6xl" />
+      </div>
+    </AuthGuard>
   );
 }
