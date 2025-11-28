@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScrollReveal } from "./scroll-reveal";
 
 const FAQS = [
   {
@@ -42,15 +43,50 @@ const FAQS = [
 
 export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const loadGSAP = async () => {
+      const gsap = (await import("gsap")).default;
+      const ScrollTrigger = (await import("gsap/ScrollTrigger")).default;
+      
+      gsap.registerPlugin(ScrollTrigger);
+
+      itemsRef.current.forEach((item, index) => {
+        if (!item) return;
+
+        gsap.fromTo(
+          item,
+          {
+            opacity: 0,
+            y: 40,
+            scale: 0.95,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            delay: index * 0.08,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+    };
+
+    loadGSAP();
+  }, []);
 
   return (
     <section className="w-full max-w-5xl mx-auto px-6 py-24">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
+      <ScrollReveal>
         <div className="text-center mb-16">
           <h2 
             className="text-4xl sm:text-5xl lg:text-6xl tracking-tight mb-4 leading-tight"
@@ -65,20 +101,20 @@ export function FAQSection() {
             (And the answers that will make you want to start right now)
           </p>
         </div>
+      </ScrollReveal>
 
-        <div className="space-y-4">
-          {FAQS.map((faq, index) => {
-            const isOpen = openIndex === index;
+      <div className="space-y-4">
+        {FAQS.map((faq, index) => {
+          const isOpen = openIndex === index;
 
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="border border-border/50 rounded-xl overflow-hidden bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300"
-              >
+          return (
+            <div
+              key={index}
+              ref={(el) => {
+                itemsRef.current[index] = el;
+              }}
+              className="border border-border/50 rounded-xl overflow-hidden bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300"
+            >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="w-full px-6 py-5 flex items-start justify-between gap-4 text-left hover:bg-muted/30 transition-colors group"
@@ -114,11 +150,10 @@ export function FAQSection() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </div>
             );
           })}
         </div>
-      </motion.div>
     </section>
   );
 }
