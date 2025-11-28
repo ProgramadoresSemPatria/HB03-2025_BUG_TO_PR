@@ -19,11 +19,12 @@ class ApiClient {
       ...options.headers,
     };
 
-    // Add auth token if available
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("auth_token");
       if (token) {
         (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+      } else {
+        console.warn("[API] No auth token found in localStorage");
       }
     }
 
