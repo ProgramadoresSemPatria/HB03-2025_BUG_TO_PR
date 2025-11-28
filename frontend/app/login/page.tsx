@@ -55,21 +55,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Simple header for login */}
-      <header className="border-b border-border/40 bg-card/30 backdrop-blur-sm">
+      <header className="border-b border-border/40 bg-background">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
             <Terminal className="h-5 w-5 text-foreground" />
-            <span className="font-semibold">bug-to-pr</span>
           </Link>
         </div>
       </header>
 
-      <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/10" />
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-chart-2/10 rounded-full blur-3xl" />
-
+      <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden bg-background">
         <Card className="w-full max-w-md relative z-10 border-border/50 shadow-2xl backdrop-blur-sm bg-card/80">
           <CardHeader className="text-center pb-2">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">

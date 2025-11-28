@@ -170,6 +170,9 @@
     @apply text-foreground;
     background: transparent;
   }
+  a, button, [role="button"] {
+    cursor: pointer;
+  }
 }
 
 /* Custom scrollbar */

@@ -120,8 +120,9 @@ export function Header({ variant = "landing" }: HeaderProps) {
         
         {/* Content - sempre visível */}
         <div className="relative flex items-center justify-between h-full">
-          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
+          <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Terminal className="h-5 w-5 text-foreground" />
+            <span className="font-semibold text-sm">bug-to-pr</span>
           </Link>
 
           <motion.nav
