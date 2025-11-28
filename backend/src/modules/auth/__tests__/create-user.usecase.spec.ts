@@ -1,18 +1,20 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CreateUserUseCase } from '../use-cases/create-user.usecase';
 import { AuthContractMock } from './mocks/auth-contract.mock';
-import { HashGeneratorMock } from './mocks/crypto.mock';
+import { HashGeneratorMock, TokenEncrypterMock } from './mocks/crypto.mock';
 import { UserAlreadyExistsError } from '../errors/user-already-exists-error';
 
 describe('CreateUserUseCase', () => {
   let createUserUseCase: CreateUserUseCase;
   let authContractMock: AuthContractMock;
   let hashGeneratorMock: HashGeneratorMock;
+  let tokenEncrypterMock: TokenEncrypterMock;
 
   beforeEach(() => {
     authContractMock = new AuthContractMock();
     hashGeneratorMock = new HashGeneratorMock();
-    createUserUseCase = new CreateUserUseCase(authContractMock, hashGeneratorMock);
+    tokenEncrypterMock = new TokenEncrypterMock();
+    createUserUseCase = new CreateUserUseCase(authContractMock, hashGeneratorMock, tokenEncrypterMock);
     authContractMock.clear();
   });
 
@@ -29,7 +31,7 @@ describe('CreateUserUseCase', () => {
     if (result.isRight()) {
       expect(result.value).toMatchObject({
         email: createUserDto.email,
-        githubPersonalAccessToken: createUserDto.githubPersonalAccessToken,
+        githubPersonalAccessToken: 'encrypted-github-token-123',
       });
       expect(result.value.id).toBeDefined();
     }
@@ -84,7 +86,7 @@ describe('CreateUserUseCase', () => {
     expect(getUserByEmailSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should call createUser with hashed password', async () => {
+  it('should call createUser with hashed password and encrypted token', async () => {
     const createUserDto = {
       email: 'test@example.com',
       password: 'password123',
@@ -92,13 +94,15 @@ describe('CreateUserUseCase', () => {
     };
 
     const createUserSpy = vi.spyOn(authContractMock, 'createUser');
+    const encryptSpy = vi.spyOn(tokenEncrypterMock, 'encrypt');
 
     await createUserUseCase.execute(createUserDto);
 
+    expect(encryptSpy).toHaveBeenCalledWith(createUserDto.githubPersonalAccessToken);
     expect(createUserSpy).toHaveBeenCalledWith({
       email: createUserDto.email,
       password: 'hashed-password123',
-      githubPersonalAccessToken: createUserDto.githubPersonalAccessToken,
+      githubPersonalAccessToken: 'encrypted-github-token-123',
     });
     expect(createUserSpy).toHaveBeenCalledTimes(1);
   });

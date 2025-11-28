@@ -21,7 +21,6 @@ describe('CreateSessionUseCase', () => {
     const password = 'password123';
     const hashedPassword = 'hashed-password123';
 
-    // Add user to mock
     authContractMock.addUser({
       id: 'user-id-123',
       email,
@@ -62,7 +61,6 @@ describe('CreateSessionUseCase', () => {
     const password = 'wrong-password';
     const hashedPassword = 'hashed-password123';
 
-    // Add user to mock
     authContractMock.addUser({
       id: 'user-id-123',
       email,

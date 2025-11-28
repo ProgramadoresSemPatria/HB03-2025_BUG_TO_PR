@@ -43,7 +43,6 @@ export function PRResult({ data, onNewAnalysis, onReset }: PRResultProps) {
 
   return (
     <div className="space-y-4">
-      {/* Success Card */}
       <Card className="border-success/30 bg-success/5">
         <CardHeader className="pb-4">
           <div className="flex items-start gap-4">
@@ -62,7 +61,6 @@ export function PRResult({ data, onNewAnalysis, onReset }: PRResultProps) {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {/* PR Link */}
           <div className="flex flex-col sm:flex-row gap-3">
             <a
               href={data.prUrl}
@@ -90,7 +88,6 @@ export function PRResult({ data, onNewAnalysis, onReset }: PRResultProps) {
             </Button>
           </div>
 
-          {/* Branch Info */}
           <div className="p-4 rounded-lg bg-card border border-border/50">
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               <GitBranch className="h-4 w-4" />
@@ -103,7 +100,6 @@ export function PRResult({ data, onNewAnalysis, onReset }: PRResultProps) {
         </CardContent>
       </Card>
 
-      {/* Bug Summary Card */}
       <Card className="border-border/50">
         <CardHeader>
           <div className="flex items-center gap-2">
@@ -113,12 +109,10 @@ export function PRResult({ data, onNewAnalysis, onReset }: PRResultProps) {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Summary Text */}
           <p className="text-sm text-muted-foreground leading-relaxed">
             {data.summary}
           </p>
 
-          {/* Details Grid */}
           <div className="grid sm:grid-cols-2 gap-3">
             <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
@@ -140,20 +134,9 @@ export function PRResult({ data, onNewAnalysis, onReset }: PRResultProps) {
               </span>
             </div>
           </div>
-
-          {/* Tokens Used */}
-          <div className="flex items-center justify-between pt-3 border-t border-border/30">
-            <span className="text-xs text-muted-foreground">
-              AI Tokens Used
-            </span>
-            <Badge variant="secondary" className="font-mono">
-              {data.tokensUsed.toLocaleString()} tokens
-            </Badge>
-          </div>
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
       <div className="flex gap-3">
         <Button
           variant="outline"

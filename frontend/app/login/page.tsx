@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Terminal, Github, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Terminal, Github, Eye, EyeOff, ArrowRight, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,9 @@ import {
 import { Footer } from "@/components/shared";
 import { ROUTES } from "@/constants";
 import { config } from "@/config";
+import { authService } from "@/services/auth";
+import { createSessionSchema, createUserSchema } from "@/validators/auth.validator";
+import type { ZodIssue } from "zod";
 import type { AuthFormData } from "@/types";
 
 export default function LoginPage() {
@@ -30,23 +34,126 @@ export default function LoginPage() {
     githubToken: "",
   });
   const [isRegister, setIsRegister] = useState(false);
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    githubToken?: string;
+  }>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const validateField = (field: "email" | "password" | "githubToken", value: string) => {
+    if (isRegister) {
+      const result = createUserSchema.safeParse({
+        email: formData.email,
+        password: formData.password,
+        githubToken: formData.githubToken,
+        [field]: value,
+      });
+      if (!result.success) {
+        const fieldError = result.error.issues.find((e) => e.path.includes(field));
+        return fieldError?.message;
+      }
+    } else if (field !== "githubToken") {
+      const result = createSessionSchema.safeParse({
+        email: formData.email,
+        password: formData.password,
+        [field]: value,
+      });
+      if (!result.success) {
+        const fieldError = result.error.issues.find((e) => e.path.includes(field));
+        return fieldError?.message;
+      }
+    }
+    return undefined;
+  };
+
+  const handleBlur = (field: "email" | "password" | "githubToken") => {
+    setTouched({ ...touched, [field]: true });
+    const error = validateField(field, formData[field]);
+    setErrors({ ...errors, [field]: error });
+  };
+
+  const handleChange = (field: "email" | "password" | "githubToken", value: string) => {
+    setFormData({ ...formData, [field]: value });
+    if (touched[field]) {
+      const error = validateField(field, value);
+      setErrors({ ...errors, [field]: error });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
+    const allTouched = {
+      email: true,
+      password: true,
+      githubToken: isRegister ? true : false,
+    };
+    setTouched(allTouched);
+
     try {
-      // TODO: Integrate with backend API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      if (formData.githubToken) {
-        localStorage.setItem("github_token", formData.githubToken);
+      if (isRegister) {
+        const validationResult = createUserSchema.safeParse({
+          email: formData.email,
+          password: formData.password,
+          githubToken: formData.githubToken,
+        });
+
+        if (!validationResult.success) {
+          const newErrors: typeof errors = {};
+          validationResult.error.issues.forEach((err: ZodIssue) => {
+            const field = err.path[0] as keyof typeof newErrors;
+            if (field && typeof field === "string") {
+              newErrors[field] = err.message;
+            }
+          });
+          setErrors(newErrors);
+          const firstError = validationResult.error.issues[0];
+          toast.error(firstError.message);
+          setIsLoading(false);
+          return;
+        }
+
+        await authService.register({
+          email: formData.email,
+          password: formData.password,
+          githubToken: formData.githubToken,
+        });
+        toast.success("Account created successfully! Please sign in.");
+        setIsRegister(false);
+        setFormData({ ...formData, githubToken: "" });
+      } else {
+        const validationResult = createSessionSchema.safeParse({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (!validationResult.success) {
+          const newErrors: typeof errors = {};
+          validationResult.error.issues.forEach((err: ZodIssue) => {
+            const field = err.path[0] as keyof typeof newErrors;
+            if (field && typeof field === "string") {
+              newErrors[field] = err.message;
+            }
+          });
+          setErrors(newErrors);
+          const firstError = validationResult.error.issues[0];
+          toast.error(firstError.message);
+          setIsLoading(false);
+          return;
+        }
+
+        await authService.login({
+          email: formData.email,
+          password: formData.password,
+        });
+        toast.success("Welcome back!");
+        router.push(ROUTES.DASHBOARD);
       }
-      
-      toast.success(isRegister ? "Account created successfully!" : "Welcome back!");
-      router.push(ROUTES.DASHBOARD);
-    } catch {
-      toast.error("Authentication failed. Please try again.");
+    } catch (error: any) {
+      const errorMessage = error?.message || "Authentication failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -89,12 +196,18 @@ export default function LoginPage() {
                   type="email"
                   placeholder="you@example.com"
                   value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  onBlur={() => handleBlur("email")}
                   required
-                  className="h-11"
+                  className={`h-11 ${errors.email ? "border-destructive" : ""}`}
+                  aria-invalid={!!errors.email}
                 />
+                {errors.email && (
+                  <p className="text-xs text-destructive flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    {errors.email}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -106,59 +219,74 @@ export default function LoginPage() {
                   type="password"
                   placeholder="••••••••"
                   value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
+                  onChange={(e) => handleChange("password", e.target.value)}
+                  onBlur={() => handleBlur("password")}
                   required
-                  className="h-11"
+                  className={`h-11 ${errors.password ? "border-destructive" : ""}`}
+                  aria-invalid={!!errors.password}
                 />
+                {errors.password && (
+                  <p className="text-xs text-destructive flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    {errors.password}
+                  </p>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="githubToken" className="text-sm font-medium flex items-center gap-2">
-                    <Github className="h-4 w-4" />
-                    GitHub Token
-                  </Label>
-                  <a
-                    href={config.github.tokenUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Generate token
-                  </a>
+              {isRegister && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="githubToken" className="text-sm font-medium flex items-center gap-2">
+                      <Github className="h-4 w-4" />
+                      GitHub Token
+                    </Label>
+                    <a
+                      href={config.github.tokenUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary hover:underline"
+                    >
+                      Generate token
+                    </a>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="githubToken"
+                      type={showToken ? "text" : "password"}
+                      placeholder="ghp_xxxxxxxxxxxx"
+                      value={formData.githubToken}
+                      onChange={(e) => handleChange("githubToken", e.target.value)}
+                      onBlur={() => handleBlur("githubToken")}
+                      required
+                      className={`h-11 pr-10 font-mono text-sm ${errors.githubToken ? "border-destructive" : ""}`}
+                      aria-invalid={!!errors.githubToken}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                      onClick={() => setShowToken(!showToken)}
+                    >
+                      {showToken ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.githubToken ? (
+                    <p className="text-xs text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {errors.githubToken}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      Required for creating branches and pull requests
+                    </p>
+                  )}
                 </div>
-                <div className="relative">
-                  <Input
-                    id="githubToken"
-                    type={showToken ? "text" : "password"}
-                    placeholder="ghp_xxxxxxxxxxxx"
-                    value={formData.githubToken}
-                    onChange={(e) =>
-                      setFormData({ ...formData, githubToken: e.target.value })
-                    }
-                    required
-                    className="h-11 pr-10 font-mono text-sm"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                    onClick={() => setShowToken(!showToken)}
-                  >
-                    {showToken ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Required for creating branches and pull requests
-                </p>
-              </div>
+              )}
 
               <Button
                 type="submit"
@@ -182,7 +310,14 @@ export default function LoginPage() {
             <div className="mt-6 text-center">
               <button
                 type="button"
-                onClick={() => setIsRegister(!isRegister)}
+                onClick={() => {
+                  setIsRegister(!isRegister);
+                  setErrors({});
+                  setTouched({});
+                  if (!isRegister) {
+                    setFormData({ ...formData, githubToken: "" });
+                  }
+                }}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {isRegister

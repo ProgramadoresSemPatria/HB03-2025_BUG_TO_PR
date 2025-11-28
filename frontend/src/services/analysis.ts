@@ -1,67 +1,121 @@
-import type { AnalysisFormData, PRData, BugToPRPayload } from "@/types";
+import type { AnalysisFormData, PRData, AnalysisRecord, GetHistoryParams } from "@/types";
 import { api } from "./api";
 
-// Simulate step delays for demo
-const STEP_DELAYS = [1500, 2000, 2500, 1500, 2000];
-
+/**
+ * Analysis Service
+ * 
+ * Endpoints:
+ * - POST /api/v1/bug-to-pr/generate - Generate PR from stack trace
+ *   Headers: Authorization: Bearer <token>
+ *   Body: { stackTrace, owner, repo, branch, aiProvider? }
+ *   Returns: { status, branch, prUrl, bugSummary, aiSummary }
+ */
 class AnalysisService {
   async analyze(
     formData: AnalysisFormData,
     onStepChange?: (step: number) => void
   ): Promise<PRData> {
-    // Simulate the process with steps
-    for (let i = 0; i < STEP_DELAYS.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, STEP_DELAYS[i]));
-      onStepChange?.(i + 1);
+    const steps = [1, 2, 3, 4, 5];
+    let currentStep = 0;
+
+    const requestPromise = api.post<{
+      status: string;
+      branch: string;
+      prUrl: string | null;
+      bugSummary: string;
+      aiSummary: string | null;
+      filePath: string;
+      lineNumber: number;
+    }>("/bug-to-pr/generate", {
+      stackTrace: formData.stackTrace,
+      owner: formData.owner,
+      repo: formData.repo,
+      branch: formData.branch,
+      aiProvider: formData.aiProvider,
+    });
+
+    const stepInterval = setInterval(() => {
+      if (currentStep < steps.length) {
+        onStepChange?.(currentStep + 1);
+        currentStep++;
+      }
+    }, 1500);
+
+    try {
+      const response = await requestPromise;
+      clearInterval(stepInterval);
+      onStepChange?.(steps.length); 
+
+      return {
+        prUrl: response.data.prUrl || "",
+        branch: response.data.branch,
+        summary: response.data.bugSummary + (response.data.aiSummary ? `\n\n${response.data.aiSummary}` : ""),
+        filePath: response.data.filePath, 
+        lineNumber: response.data.lineNumber, 
+        tokensUsed: 0, 
+      };
+    } catch (error) {
+      clearInterval(stepInterval);
+      throw error;
     }
-
-    // TODO: Replace with actual API call
-    // const payload: BugToPRPayload = {
-    //   userId: "current-user-id",
-    //   owner: formData.owner,
-    //   repo: formData.repo,
-    //   branch: formData.branch,
-    //   stackTrace: formData.stackTrace,
-    // };
-    // const response = await api.post<PRData>("/agents/bug-to-pr", payload);
-    // return response.data;
-
-    // Mock result for now
-    return {
-      prUrl: `https://github.com/${formData.owner}/${formData.repo}/pull/42`,
-      branch: `fix/bug-${Date.now().toString(36)}`,
-      summary:
-        "Fixed NullPointerException caused by uninitialized variable in the authentication flow. The error occurred when processing user sessions without valid tokens.",
-      filePath: "src/services/AuthService.java",
-      lineNumber: 127,
-      tokensUsed: 1847,
-    };
   }
 
-  parseStackTrace(stackTrace: string): { filePath: string; lineNumber: number } | null {
-    // Common patterns for different languages
-    const patterns = [
-      // JavaScript/TypeScript: at Function (file.ts:10:5)
-      /at\s+(?:\w+\s+)?\((.+):(\d+):\d+\)/,
-      // Python: File "file.py", line 10
-      /File\s+"(.+)",\s+line\s+(\d+)/,
-      // Java: at package.Class.method(File.java:10)
-      /at\s+[\w.]+\((.+):(\d+)\)/,
-      // Go: file.go:10
-      /^\s*(.+\.go):(\d+)/m,
-    ];
+  async getHistory(params?: GetHistoryParams): Promise<AnalysisRecord[]> {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.status) queryParams.append("status", params.status);
+    if (params?.owner) queryParams.append("owner", params.owner);
+    if (params?.repo) queryParams.append("repo", params.repo);
+    if (params?.limit) queryParams.append("limit", params.limit.toString());
+    if (params?.offset) queryParams.append("offset", params.offset.toString());
 
-    for (const pattern of patterns) {
-      const match = stackTrace.match(pattern);
-      if (match) {
-        return {
-          filePath: match[1],
-          lineNumber: parseInt(match[2], 10),
-        };
+    const queryString = queryParams.toString();
+    const endpoint = `/bug-to-pr/history${queryString ? `?${queryString}` : ""}`;
+
+    const response = await api.get<{
+      history: Array<{
+        id: string;
+        status: string;
+        branch: string;
+        prUrl: string | null;
+        bugSummary: string;
+        aiSummary: string | null;
+        baseBranch: string;
+        filePath: string;
+        lineNumber: number;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+    }>(endpoint);
+
+    return response.data.history.map((item) => {
+      let owner: string | undefined;
+      let repo: string | undefined;
+      let repoDisplay = "Repository";
+      
+      if (item.prUrl) {
+        const match = item.prUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+        if (match) {
+          owner = match[1];
+          repo = match[2];
+          repoDisplay = `${owner}/${repo}`;
+        }
       }
-    }
 
-    return null;
+      return {
+        id: item.id,
+        repo: repoDisplay,
+        branch: item.branch,
+        prUrl: item.prUrl || "",
+        status: item.status === "success" ? "success" : item.status === "pending" ? "pending" : item.status === "failed" ? "failed" : "error",
+        createdAt: new Date(item.createdAt),
+        summary: item.bugSummary + (item.aiSummary ? `\n\n${item.aiSummary}` : ""),
+        owner,
+        baseBranch: item.baseBranch,
+        filePath: item.filePath,
+        lineNumber: item.lineNumber,
+      };
+    });
   }
 }
 
