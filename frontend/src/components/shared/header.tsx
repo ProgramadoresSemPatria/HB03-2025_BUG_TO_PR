@@ -74,7 +74,7 @@ export function Header({ variant = "landing" }: HeaderProps) {
           borderBottomWidth: scrolled ? 1 : 0,
         }}
         transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
-        className="absolute inset-0 bg-card/10 backdrop-blur-md shadow-sm border-b border-border/10 pointer-events-none"
+        className="absolute inset-0 bg-card/5 backdrop-blur-md shadow-sm border-b border-border/10 pointer-events-none"
       />
       
       {/* Content container */}
@@ -115,14 +115,13 @@ export function Header({ variant = "landing" }: HeaderProps) {
             pointerEvents: scrolled ? "none" : "auto",
           }}
           transition={isMounted ? { duration: 0.3, ease: [0.4, 0, 0.2, 1] } : { duration: 0 }}
-          className="absolute inset-0 flex items-center justify-between rounded-lg bg-card/10 backdrop-blur-md border border-border/10"
+          className="absolute inset-0 flex items-center justify-between rounded-lg bg-card/5 backdrop-blur-md border border-border/10"
         />
         
         {/* Content - sempre visível */}
         <div className="relative flex items-center justify-between h-full">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
             <Terminal className="h-5 w-5 text-foreground" />
-            <span className="font-semibold text-sm">bug-to-pr</span>
           </Link>
 
           <motion.nav
