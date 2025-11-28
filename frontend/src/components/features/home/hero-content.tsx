@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants";
 
@@ -18,9 +19,15 @@ export function HeroContent() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 mb-2"
+        className="inline-flex items-center gap-2 pl-1.5 pr-4 py-1.5 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 mb-2"
       >
-        <Zap className="h-3.5 w-3.5 text-white" />
+        <Image 
+          src="/raio.gif" 
+          alt="Lightning" 
+          width={48}
+          height={48}
+          className="object-cover"
+        />
         <span className="text-xs font-medium text-white/90 uppercase tracking-wider">
           Automated Bug Fixes
         </span>
