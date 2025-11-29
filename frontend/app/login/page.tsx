@@ -160,24 +160,25 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'linear-gradient(to bottom right, rgb(2 6 23), rgb(15 23 42), rgb(2 6 23))' }}>
-      {/* Background with different colors - more subtle and focused */}
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#0a0e1a]">
+      {/* Background with better contrast */}
       <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 opacity-50"
+          style={{
+            background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 50%)",
+          }}
+        />
         <div 
           className="absolute inset-0 opacity-40"
           style={{
-            background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 60%)",
+            background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
           }}
         />
-        <div 
-          className="absolute inset-0 opacity-30"
-          style={{
-            background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)",
-          }}
-        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, transparent, rgba(10, 14, 26, 0.5))' }} />
       </div>
 
-      <header className="relative z-10 border-b border-slate-800/50 bg-slate-950/50 backdrop-blur-lg">
+      <header className="relative z-10 border-b border-slate-800/60 bg-[#0a0e1a]/80 backdrop-blur-xl">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center">
           <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity -ml-4 sm:-ml-6">
             <img
@@ -192,14 +193,14 @@ export default function LoginPage() {
 
       <div className="flex-1 flex items-center justify-center p-4 relative z-10">
         <div className="relative w-full max-w-md">
-          {/* Different glow effect - more subtle and focused */}
+          {/* Enhanced glow effect */}
           <div 
-            className="absolute -inset-0.5 rounded-xl opacity-30 blur-2xl"
+            className="absolute -inset-1 rounded-xl opacity-40 blur-2xl"
             style={{
-              background: "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%)",
+              background: "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 70%)",
             }}
           />
-          <Card className="relative z-10 w-full border-slate-700/50 shadow-2xl backdrop-blur-xl bg-slate-900/80 dark:bg-slate-900/90">
+          <Card className="relative z-10 w-full border-slate-700/70 shadow-2xl backdrop-blur-xl bg-[#111827]/95 dark:bg-[#111827]/95">
           <CardHeader className="text-center pb-2">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center">
               <img
@@ -216,7 +217,7 @@ export default function LoginPage() {
               {isRegister ? "Create Account" : "Welcome Back"}
             </CardTitle>
             <CardDescription 
-              className="text-muted-foreground"
+              className="text-slate-400"
               style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
             >
               {isRegister
@@ -228,7 +229,7 @@ export default function LoginPage() {
           <CardContent className="pt-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                <Label htmlFor="email" className="text-sm font-medium text-slate-200">
                   Email
                 </Label>
                 <Input
@@ -239,7 +240,7 @@ export default function LoginPage() {
                   onChange={(e) => handleChange("email", e.target.value)}
                   onBlur={() => handleBlur("email")}
                   required
-                  className={`h-11 bg-slate-800/50 border-slate-700/60 text-foreground placeholder:text-slate-500 focus:border-primary/80 focus:ring-primary/30 focus:bg-slate-800/70 ${errors.email ? "border-destructive" : ""}`}
+                  className={`h-11 bg-[#1f2937]/80 border-slate-600/70 text-white placeholder:text-slate-400 focus:border-primary focus:ring-primary/40 focus:bg-[#1f2937] transition-colors ${errors.email ? "border-destructive" : ""}`}
                   aria-invalid={!!errors.email}
                 />
                 {errors.email && (
@@ -251,7 +252,7 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                <Label htmlFor="password" className="text-sm font-medium text-slate-200">
                   Password
                 </Label>
                 <Input
@@ -262,7 +263,7 @@ export default function LoginPage() {
                   onChange={(e) => handleChange("password", e.target.value)}
                   onBlur={() => handleBlur("password")}
                   required
-                  className={`h-11 bg-slate-800/50 border-slate-700/60 text-foreground placeholder:text-slate-500 focus:border-primary/80 focus:ring-primary/30 focus:bg-slate-800/70 ${errors.password ? "border-destructive" : ""}`}
+                  className={`h-11 bg-[#1f2937]/80 border-slate-600/70 text-white placeholder:text-slate-400 focus:border-primary focus:ring-primary/40 focus:bg-[#1f2937] transition-colors ${errors.password ? "border-destructive" : ""}`}
                   aria-invalid={!!errors.password}
                 />
                 {errors.password && (
@@ -276,7 +277,7 @@ export default function LoginPage() {
               {isRegister && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="githubToken" className="text-sm font-medium text-foreground flex items-center gap-2">
+                    <Label htmlFor="githubToken" className="text-sm font-medium text-slate-200 flex items-center gap-2">
                       <Github className="h-4 w-4" />
                       GitHub Token
                     </Label>
@@ -298,7 +299,7 @@ export default function LoginPage() {
                       onChange={(e) => handleChange("githubToken", e.target.value)}
                       onBlur={() => handleBlur("githubToken")}
                       required
-                      className={`h-11 pr-10 font-mono text-sm bg-slate-800/50 border-slate-700/60 text-foreground placeholder:text-slate-500 focus:border-primary/80 focus:ring-primary/30 focus:bg-slate-800/70 ${errors.githubToken ? "border-destructive" : ""}`}
+                      className={`h-11 pr-10 font-mono text-sm bg-[#1f2937]/80 border-slate-600/70 text-white placeholder:text-slate-400 focus:border-primary focus:ring-primary/40 focus:bg-[#1f2937] transition-colors ${errors.githubToken ? "border-destructive" : ""}`}
                       aria-invalid={!!errors.githubToken}
                     />
                     <Button
