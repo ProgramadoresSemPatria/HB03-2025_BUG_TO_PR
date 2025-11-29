@@ -26,6 +26,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: `${config.appName} | Automated Bug Fixes`,
   description: config.appDescription,
+  icons: {
+    icon: "/logo.gif",
+    shortcut: "/logo.gif",
+    apple: "/logo.gif",
+  },
 };
 
 export default function RootLayout({
