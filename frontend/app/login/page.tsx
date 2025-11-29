@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Terminal, Github, Eye, EyeOff, ArrowRight, AlertCircle } from "lucide-react";
+import { Github, Eye, EyeOff, ArrowRight, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -160,25 +160,65 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-border/40 bg-background">
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'linear-gradient(to bottom right, rgb(2 6 23), rgb(15 23 42), rgb(2 6 23))' }}>
+      {/* Background with different colors - more subtle and focused */}
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{
+            background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 60%)",
+          }}
+        />
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)",
+          }}
+        />
+      </div>
+
+      <header className="relative z-10 border-b border-slate-800/50 bg-slate-950/50 backdrop-blur-lg">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center">
-          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity">
-            <Terminal className="h-5 w-5 text-foreground" />
+          <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity -ml-4 sm:-ml-6">
+            <img
+              src="/logo.gif"
+              alt=""
+              className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 object-contain"
+              style={{ imageRendering: "auto" }}
+            />
           </Link>
         </div>
       </header>
 
-      <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden bg-background">
-        <Card className="w-full max-w-md relative z-10 border-border/50 shadow-2xl backdrop-blur-sm bg-card/80">
+      <div className="flex-1 flex items-center justify-center p-4 relative z-10">
+        <div className="relative w-full max-w-md">
+          {/* Different glow effect - more subtle and focused */}
+          <div 
+            className="absolute -inset-0.5 rounded-xl opacity-30 blur-2xl"
+            style={{
+              background: "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%)",
+            }}
+          />
+          <Card className="relative z-10 w-full border-slate-700/50 shadow-2xl backdrop-blur-xl bg-slate-900/80 dark:bg-slate-900/90">
           <CardHeader className="text-center pb-2">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
-              <Terminal className="h-7 w-7 text-primary" />
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center">
+              <img
+                src="/logo.gif"
+                alt=""
+                className="h-14 w-14 object-contain"
+                style={{ imageRendering: "auto" }}
+              />
             </div>
-            <CardTitle className="text-2xl font-bold tracking-tight">
+            <CardTitle 
+              className="text-3xl font-bold tracking-tight mb-2"
+              style={{ fontFamily: '"Lyondisplay App", Georgia, serif', fontWeight: 300 }}
+            >
               {isRegister ? "Create Account" : "Welcome Back"}
             </CardTitle>
-            <CardDescription className="text-muted-foreground">
+            <CardDescription 
+              className="text-muted-foreground"
+              style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
+            >
               {isRegister
                 ? "Sign up to start fixing bugs"
                 : "Sign in to continue"}
@@ -188,7 +228,7 @@ export default function LoginPage() {
           <CardContent className="pt-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground">
                   Email
                 </Label>
                 <Input
@@ -199,7 +239,7 @@ export default function LoginPage() {
                   onChange={(e) => handleChange("email", e.target.value)}
                   onBlur={() => handleBlur("email")}
                   required
-                  className={`h-11 ${errors.email ? "border-destructive" : ""}`}
+                  className={`h-11 bg-slate-800/50 border-slate-700/60 text-foreground placeholder:text-slate-500 focus:border-primary/80 focus:ring-primary/30 focus:bg-slate-800/70 ${errors.email ? "border-destructive" : ""}`}
                   aria-invalid={!!errors.email}
                 />
                 {errors.email && (
@@ -211,7 +251,7 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">
                   Password
                 </Label>
                 <Input
@@ -222,7 +262,7 @@ export default function LoginPage() {
                   onChange={(e) => handleChange("password", e.target.value)}
                   onBlur={() => handleBlur("password")}
                   required
-                  className={`h-11 ${errors.password ? "border-destructive" : ""}`}
+                  className={`h-11 bg-slate-800/50 border-slate-700/60 text-foreground placeholder:text-slate-500 focus:border-primary/80 focus:ring-primary/30 focus:bg-slate-800/70 ${errors.password ? "border-destructive" : ""}`}
                   aria-invalid={!!errors.password}
                 />
                 {errors.password && (
@@ -236,7 +276,7 @@ export default function LoginPage() {
               {isRegister && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="githubToken" className="text-sm font-medium flex items-center gap-2">
+                    <Label htmlFor="githubToken" className="text-sm font-medium text-foreground flex items-center gap-2">
                       <Github className="h-4 w-4" />
                       GitHub Token
                     </Label>
@@ -258,7 +298,7 @@ export default function LoginPage() {
                       onChange={(e) => handleChange("githubToken", e.target.value)}
                       onBlur={() => handleBlur("githubToken")}
                       required
-                      className={`h-11 pr-10 font-mono text-sm ${errors.githubToken ? "border-destructive" : ""}`}
+                      className={`h-11 pr-10 font-mono text-sm bg-slate-800/50 border-slate-700/60 text-foreground placeholder:text-slate-500 focus:border-primary/80 focus:ring-primary/30 focus:bg-slate-800/70 ${errors.githubToken ? "border-destructive" : ""}`}
                       aria-invalid={!!errors.githubToken}
                     />
                     <Button
@@ -290,7 +330,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full h-11 font-medium"
+                className="w-full h-11 font-medium uppercase bg-white text-black hover:bg-white/90"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -327,9 +367,10 @@ export default function LoginPage() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
 
-      <Footer maxWidth="max-w-6xl" />
+      <Footer maxWidth="max-w-6xl" variant="slate" />
     </div>
   );
 }
