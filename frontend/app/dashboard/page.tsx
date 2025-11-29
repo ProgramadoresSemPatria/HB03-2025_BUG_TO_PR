@@ -10,6 +10,7 @@ import {
   LoadingSteps,
   PRResult,
 } from "@/components/features/analysis";
+import { AnimatedBackground } from "@/components/features/analysis/animated-background";
 import { analysisService } from "@/services/analysis";
 import { generatePRSchema } from "@/validators/analysis.validator";
 import type { PRData, AnalysisFormData, ViewState } from "@/types";
@@ -79,10 +80,26 @@ export default function DashboardPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen bg-[#0a0a0a] flex flex-col relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(34, 211, 238, 0.05) 0%, transparent 50%)",
+            }}
+          />
+          <div 
+            className="absolute inset-0 opacity-15"
+            style={{
+              background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(34, 211, 238, 0.03) 0%, transparent 50%)",
+            }}
+          />
+          <AnimatedBackground />
+        </div>
+
         <Header variant="app" />
 
-        <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-8">
+        <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-8 relative z-10">
           <div className="space-y-6">
             {viewState === "form" && (
               <AnalysisForm

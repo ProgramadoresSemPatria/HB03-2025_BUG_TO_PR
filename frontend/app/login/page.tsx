@@ -160,25 +160,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#0a0e1a]">
-      {/* Background with better contrast */}
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#0a0a0a]">
+      {/* Background gradients - Warp style */}
       <div className="absolute inset-0 z-0">
         <div 
-          className="absolute inset-0 opacity-50"
+          className="absolute inset-0 opacity-20"
           style={{
-            background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 50%)",
+            background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(34, 211, 238, 0.05) 0%, transparent 50%)",
           }}
         />
         <div 
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-15"
           style={{
-            background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
+            background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(34, 211, 238, 0.03) 0%, transparent 50%)",
           }}
         />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, transparent, rgba(10, 14, 26, 0.5))' }} />
       </div>
 
-      <header className="relative z-10 border-b border-slate-800/60 bg-[#0a0e1a]/80 backdrop-blur-xl">
+      <header className="relative z-10 border-b border-slate-900/80 bg-[#0a0a0a]/90 backdrop-blur-xl">
         <div className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center">
           <Link href={ROUTES.HOME} className="flex items-center hover:opacity-80 transition-opacity -ml-4 sm:-ml-6">
             <img
@@ -193,15 +192,17 @@ export default function LoginPage() {
 
       <div className="flex-1 flex items-center justify-center p-4 relative z-10">
         <div className="relative w-full max-w-md">
-          {/* Enhanced glow effect */}
+          {/* Glow effect - Warp style */}
           <div 
-            className="absolute -inset-1 rounded-xl opacity-40 blur-2xl"
+            className="absolute -inset-0.5 rounded opacity-20 blur-2xl"
             style={{
-              background: "radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 70%)",
+              background: "radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.1) 0%, transparent 70%)",
             }}
           />
-          <Card className="relative z-10 w-full border-slate-700/70 shadow-2xl backdrop-blur-xl bg-[#111827]/95 dark:bg-[#111827]/95">
-          <CardHeader className="text-center pb-2">
+          <Card className="relative z-10 w-full border-slate-900/80 bg-[#0a0a0a]/95 backdrop-blur-xl overflow-hidden" style={{ 
+            boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.5)',
+          }}>
+          <CardHeader className="text-center pb-6 border-b border-slate-900/50">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center">
               <img
                 src="/logo.gif"
@@ -211,14 +212,14 @@ export default function LoginPage() {
               />
             </div>
             <CardTitle 
-              className="text-3xl font-bold tracking-tight mb-2"
-              style={{ fontFamily: '"Lyondisplay App", Georgia, serif', fontWeight: 300 }}
+              className="text-xl font-normal tracking-tight mb-1.5 text-white"
+              style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace', fontWeight: 400, letterSpacing: '-0.01em' }}
             >
               {isRegister ? "Create Account" : "Welcome Back"}
             </CardTitle>
             <CardDescription 
-              className="text-slate-400"
-              style={{ fontFamily: '"Suisseintl", sans-serif', fontWeight: 300 }}
+              className="text-slate-400 text-xs"
+              style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace', fontWeight: 400 }}
             >
               {isRegister
                 ? "Sign up to start fixing bugs"
@@ -226,10 +227,10 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="pt-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-slate-200">
+          <CardContent className="pt-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-xs font-normal text-slate-400 uppercase tracking-wider" style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}>
                   Email
                 </Label>
                 <Input
@@ -240,7 +241,11 @@ export default function LoginPage() {
                   onChange={(e) => handleChange("email", e.target.value)}
                   onBlur={() => handleBlur("email")}
                   required
-                  className={`h-11 bg-[#1f2937]/80 border-slate-600/70 text-white placeholder:text-slate-400 focus:border-primary focus:ring-primary/40 focus:bg-[#1f2937] transition-colors ${errors.email ? "border-destructive" : ""}`}
+                  className={`h-9 bg-[#0a0a0a] border-slate-800/70 text-white placeholder:text-slate-500 focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40 font-mono text-sm ${errors.email ? "border-red-500/50" : ""}`}
+                  style={{
+                    fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
+                    boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+                  }}
                   aria-invalid={!!errors.email}
                 />
                 {errors.email && (
@@ -251,8 +256,8 @@ export default function LoginPage() {
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-slate-200">
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-xs font-normal text-slate-400 uppercase tracking-wider" style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}>
                   Password
                 </Label>
                 <Input
@@ -263,7 +268,11 @@ export default function LoginPage() {
                   onChange={(e) => handleChange("password", e.target.value)}
                   onBlur={() => handleBlur("password")}
                   required
-                  className={`h-11 bg-[#1f2937]/80 border-slate-600/70 text-white placeholder:text-slate-400 focus:border-primary focus:ring-primary/40 focus:bg-[#1f2937] transition-colors ${errors.password ? "border-destructive" : ""}`}
+                  className={`h-9 bg-[#0a0a0a] border-slate-800/70 text-white placeholder:text-slate-500 focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40 font-mono text-sm ${errors.password ? "border-red-500/50" : ""}`}
+                  style={{
+                    fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
+                    boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+                  }}
                   aria-invalid={!!errors.password}
                 />
                 {errors.password && (
@@ -275,17 +284,18 @@ export default function LoginPage() {
               </div>
 
               {isRegister && (
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="githubToken" className="text-sm font-medium text-slate-200 flex items-center gap-2">
-                      <Github className="h-4 w-4" />
+                    <Label htmlFor="githubToken" className="text-xs font-normal text-slate-400 uppercase tracking-wider flex items-center gap-2" style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}>
+                      <Github className="h-3 w-3 text-slate-500" />
                       GitHub Token
                     </Label>
                     <a
                       href={config.github.tokenUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-primary hover:underline"
+                      className="text-xs text-cyan-400 hover:text-cyan-300 font-mono transition-colors"
+                      style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}
                     >
                       Generate token
                     </a>
@@ -299,7 +309,11 @@ export default function LoginPage() {
                       onChange={(e) => handleChange("githubToken", e.target.value)}
                       onBlur={() => handleBlur("githubToken")}
                       required
-                      className={`h-11 pr-10 font-mono text-sm bg-[#1f2937]/80 border-slate-600/70 text-white placeholder:text-slate-400 focus:border-primary focus:ring-primary/40 focus:bg-[#1f2937] transition-colors ${errors.githubToken ? "border-destructive" : ""}`}
+                      className={`h-9 pr-10 font-mono text-sm bg-[#0a0a0a] border-slate-800/70 text-white placeholder:text-slate-500 focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40 ${errors.githubToken ? "border-red-500/50" : ""}`}
+                      style={{
+                        fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
+                        boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+                      }}
                       aria-invalid={!!errors.githubToken}
                     />
                     <Button
@@ -310,9 +324,9 @@ export default function LoginPage() {
                       onClick={() => setShowToken(!showToken)}
                     >
                       {showToken ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        <EyeOff className="h-4 w-4 text-slate-500 hover:text-slate-400" />
                       ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
+                        <Eye className="h-4 w-4 text-slate-500 hover:text-slate-400" />
                       )}
                     </Button>
                   </div>
@@ -322,7 +336,7 @@ export default function LoginPage() {
                       {errors.githubToken}
                     </p>
                   ) : (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-slate-600 font-mono">
                       Required for creating branches and pull requests
                     </p>
                   )}
@@ -331,7 +345,11 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full h-11 font-medium uppercase bg-white text-black hover:bg-white/90"
+                className="w-full h-10 text-sm gap-2 bg-white text-black hover:bg-white/95 uppercase font-mono tracking-wide"
+                style={{
+                  fontFamily: 'var(--font-geist-mono), ui-monospace, monospace',
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                }}
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -359,7 +377,8 @@ export default function LoginPage() {
                     setFormData({ ...formData, githubToken: "" });
                   }
                 }}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="text-xs text-slate-500 hover:text-slate-400 transition-colors font-mono"
+                style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}
               >
                 {isRegister
                   ? "Already have an account? Sign in"
