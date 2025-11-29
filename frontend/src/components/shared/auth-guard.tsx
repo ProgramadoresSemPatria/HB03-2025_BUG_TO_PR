@@ -22,7 +22,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
       setIsChecking(false);
 
       if (!authenticated) {
-        router.push(ROUTES.LOGIN);
+        window.location.href = ROUTES.LOGIN;
       }
     };
 
@@ -31,17 +31,56 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   if (isChecking) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Checking authentication...</p>
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(34, 211, 238, 0.05) 0%, transparent 50%)",
+            }}
+          />
+          <div 
+            className="absolute inset-0 opacity-15"
+            style={{
+              background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(34, 211, 238, 0.03) 0%, transparent 50%)",
+            }}
+          />
+        </div>
+        <div className="flex flex-col items-center gap-4 relative z-10">
+          <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+          <p className="text-sm text-slate-400 font-mono" style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}>
+            Checking authentication...
+          </p>
         </div>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return null;
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(34, 211, 238, 0.05) 0%, transparent 50%)",
+            }}
+          />
+          <div 
+            className="absolute inset-0 opacity-15"
+            style={{
+              background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(34, 211, 238, 0.03) 0%, transparent 50%)",
+            }}
+          />
+        </div>
+        <div className="flex flex-col items-center gap-4 relative z-10">
+          <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+          <p className="text-sm text-slate-400 font-mono" style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}>
+            Redirecting to login...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return <>{children}</>;
