@@ -116,7 +116,7 @@ describe('GeneratePRUseCase', () => {
     expect(result.isLeft()).toBe(true);
     if (result.isLeft()) {
       expect(result.value).toBeInstanceOf(GithubError);
-      expect(result.value.statusCode).toBe(400);
+      expect(result.value.statusCode).toBe(404);
     }
   });
 
@@ -131,7 +131,7 @@ describe('GeneratePRUseCase', () => {
     expect(result.isLeft()).toBe(true);
     if (result.isLeft()) {
       expect(result.value).toBeInstanceOf(PatchError);
-      expect(result.value.statusCode).toBe(400);
+      expect(result.value.statusCode).toBe(500);
     }
     expect(generatePatchSpy).toHaveBeenCalled();
   });
