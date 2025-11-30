@@ -39,7 +39,7 @@ export class GeneratePRUseCase {
       }
 
       if (!user.githubPersonalAccessToken) {
-        return left(new GithubError(400));
+        return left(GithubError.unauthorized());
       }
 
       let githubToken: string;
@@ -47,7 +47,7 @@ export class GeneratePRUseCase {
         githubToken = this.tokenEncrypter.decrypt(user.githubPersonalAccessToken);
       } catch (error: any) {
         console.error('[GeneratePRUseCase] Error decrypting token:', error.message);
-        return left(new GithubError(400));
+        return left(GithubError.unauthorized());
       }
 
       const strategy = AIStrategyFactory.create(dto.aiProvider);
@@ -56,7 +56,7 @@ export class GeneratePRUseCase {
       const stackTraceInfo = this.stackTraceParser.parse(dto.stackTrace);
       
       if (!stackTraceInfo) {
-        return left(new InvalidStackTraceError(400));
+        return left(InvalidStackTraceError.noFileFound());
       }
 
       const initialRecord = await this.bugToPRContract.createPR({
@@ -82,7 +82,7 @@ export class GeneratePRUseCase {
           githubToken,
         );
       } catch (error: any) {
-        return left(new GithubError(400));
+        return left(GithubError.fileNotFound(stackTraceInfo.filePath));
       }
 
       let patchInfo;
@@ -98,11 +98,11 @@ export class GeneratePRUseCase {
         await this.bugToPRContract.updatePR(initialRecord.id, {
           status: PR_STATUS.FAILED,
         });
-        return left(new PatchError(400));
+        return left(PatchError.aiGenerationFailed());
       }
 
       if (!this.patchService.validatePatch(patchInfo.patch)) {
-        return left(new PatchError(400));
+        return left(PatchError.invalidPatch());
       }
 
       let patchedContent;
@@ -112,7 +112,7 @@ export class GeneratePRUseCase {
           patchInfo.patch,
         );
       } catch (error: any) {
-        return left(new PatchError(400));
+        return left(PatchError.applyFailed());
       }
 
       const branchName = `${BRANCH_PREFIXES.AI_FIX}/${stackTraceInfo.filePath.replace(/\//g, '-')}-${Date.now()}`;
@@ -125,7 +125,7 @@ export class GeneratePRUseCase {
           githubToken,
         );
       } catch (error: any) {
-        return left(new GithubError(400));
+        return left(GithubError.createBranchFailed(branchName));
       }
 
       const commitMessage = `${COMMIT_PREFIXES.AI_FIX} ${patchInfo.bugSummary}`;
@@ -141,7 +141,7 @@ export class GeneratePRUseCase {
           githubToken,
         );
       } catch (error: any) {
-        return left(new GithubError(400));
+        return left(GithubError.updateFileFailed(stackTraceInfo.filePath));
       }
 
       const baseBranch = BRANCHES.DEV;
@@ -167,7 +167,7 @@ export class GeneratePRUseCase {
             status: PR_STATUS.FAILED,
             branch: branchName,
           });
-          return left(new GithubError(400));
+          return left(GithubError.createBranchFailed(baseBranch));
         }
       }
 
@@ -190,7 +190,7 @@ export class GeneratePRUseCase {
           status: PR_STATUS.FAILED,
           branch: branchName,
         });
-        return left(new GithubError(400));
+        return left(GithubError.createPRFailed());
       }
 
       const finalRecord = await this.bugToPRContract.updatePR(initialRecord.id, {
