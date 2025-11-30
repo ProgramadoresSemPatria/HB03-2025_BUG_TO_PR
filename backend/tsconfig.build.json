@@ -14,8 +14,7 @@
     "sourceMap": true,
     "strict": false,
     "noImplicitAny": false,
-    "strictNullChecks": false,
-    "types": ["node"]
+    "strictNullChecks": false
   },
   "include": ["src/**/*"],
   "exclude": [
