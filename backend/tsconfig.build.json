@@ -15,8 +15,7 @@
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "typeRoots": ["./node_modules/@types"],
-    "types": ["node"]
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["src/**/*"],
   "exclude": [
