@@ -10,12 +10,9 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "declaration": true,
-    "sourceMap": true,
-    "strict": false,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "typeRoots": ["./node_modules/@types"]
+    "declaration": false,
+    "sourceMap": false,
+    "strict": false
   },
   "include": ["src/**/*"],
   "exclude": [
