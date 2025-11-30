@@ -14,7 +14,7 @@ const inter = Inter({
 const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700" , "300"],
   display: "swap",
 });
 
