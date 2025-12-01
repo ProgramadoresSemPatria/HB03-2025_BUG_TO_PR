@@ -38,7 +38,7 @@ class ApiClient {
 
       if (!response.ok) {
         throw {
-          message: data.message || "An error occurred",
+          message: data.message || data.error ||  "An error occurred",
           code: data.code,
           status: response.status,
         } as ApiError;
