@@ -3,18 +3,23 @@ import { CreateUserUseCase } from '../use-cases/create-user.usecase';
 import { AuthContractMock } from './mocks/auth-contract.mock';
 import { HashGeneratorMock, TokenEncrypterMock } from './mocks/crypto.mock';
 import { UserAlreadyExistsError } from '../errors/user-already-exists-error';
+import { InvalidGithubTokenError } from '../errors/invalid-github-token-error';
+import { GithubTokenValidator } from '../services/github-token-validator';
 
 describe('CreateUserUseCase', () => {
   let createUserUseCase: CreateUserUseCase;
   let authContractMock: AuthContractMock;
   let hashGeneratorMock: HashGeneratorMock;
   let tokenEncrypterMock: TokenEncrypterMock;
+  let githubTokenValidatorMock: GithubTokenValidator;
 
   beforeEach(() => {
     authContractMock = new AuthContractMock();
     hashGeneratorMock = new HashGeneratorMock();
     tokenEncrypterMock = new TokenEncrypterMock();
-    createUserUseCase = new CreateUserUseCase(authContractMock, hashGeneratorMock, tokenEncrypterMock);
+    githubTokenValidatorMock = new GithubTokenValidator();
+    vi.spyOn(githubTokenValidatorMock, 'validateToken').mockResolvedValue(true);
+    createUserUseCase = new CreateUserUseCase(authContractMock, hashGeneratorMock, tokenEncrypterMock, githubTokenValidatorMock);
     authContractMock.clear();
   });
 
@@ -105,6 +110,40 @@ describe('CreateUserUseCase', () => {
       githubPersonalAccessToken: 'encrypted-github-token-123',
     });
     expect(createUserSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return InvalidGithubTokenError when GitHub token is invalid', async () => {
+    const createUserDto = {
+      email: 'test@example.com',
+      password: 'password123',
+      githubPersonalAccessToken: 'invalid-token',
+    };
+
+    vi.spyOn(githubTokenValidatorMock, 'validateToken').mockResolvedValue(false);
+
+    const result = await createUserUseCase.execute(createUserDto);
+
+    expect(result.isLeft()).toBe(true);
+    if (result.isLeft()) {
+      expect(result.value).toBeInstanceOf(InvalidGithubTokenError);
+      expect(result.value.statusCode).toBe(400);
+      expect(result.value.message).toBe('Invalid GitHub personal access token');
+    }
+  });
+
+  it('should validate GitHub token before creating user', async () => {
+    const createUserDto = {
+      email: 'test@example.com',
+      password: 'password123',
+      githubPersonalAccessToken: 'github-token-123',
+    };
+
+    const validateTokenSpy = vi.spyOn(githubTokenValidatorMock, 'validateToken');
+
+    await createUserUseCase.execute(createUserDto);
+
+    expect(validateTokenSpy).toHaveBeenCalledWith(createUserDto.githubPersonalAccessToken);
+    expect(validateTokenSpy).toHaveBeenCalledTimes(1);
   });
 });
 
