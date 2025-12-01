@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 export const createSessionSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Password must have at least 8 characters"),
 });
 
 export const createUserSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres"),
-  githubToken: z.string().min(1, "GitHub Personal Access Token é obrigatório"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Password must have at least 8 characters"),
+  githubToken: z.string().min(1, "GitHub Personal Access Token is required"),
 });
 
 export type CreateSessionInput = z.infer<typeof createSessionSchema>;
