@@ -10,12 +10,12 @@ export class CreateUserController {
     next: NextFunction
   ) {
     try {
-      const { email, password, githubPersonalAccessToken, githubToken } = request.body;
+      const { email, password, githubPersonalAccessToken } = request.body;
 
       const user = await this.createUser.execute({
         email,
         password,
-        githubPersonalAccessToken: githubPersonalAccessToken || githubToken,
+        githubPersonalAccessToken,
       });
 
       if (user.isLeft()) {
