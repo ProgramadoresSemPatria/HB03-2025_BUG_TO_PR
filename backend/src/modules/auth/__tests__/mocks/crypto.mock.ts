@@ -1,4 +1,5 @@
 import { HashComparer, HashGenerator } from '../../contract/crypto-contract';
+import { TokenEncrypter } from '../../cryptography/token-encrypter';
 
 export class HashGeneratorMock implements HashGenerator {
   async hash(plain: string): Promise<string> {
@@ -31,6 +32,19 @@ export class BcryptHasherMock implements HashGenerator, HashComparer {
 
   setShouldMatch(shouldMatch: boolean): void {
     this.shouldMatch = shouldMatch;
+  }
+}
+
+export class TokenEncrypterMock implements TokenEncrypter {
+  encrypt(plaintext: string): string {
+    return `encrypted-${plaintext}`;
+  }
+
+  decrypt(encrypted: string): string {
+    if (!encrypted.startsWith('encrypted-')) {
+      throw new Error('Invalid encrypted token format');
+    }
+    return encrypted.replace('encrypted-', '');
   }
 }
 
