@@ -25,11 +25,10 @@ export class CreateUserUseCase {
       return left(new UserAlreadyExistsError(409));
     }
 
-    if (githubPersonalAccessToken) {
-      const isValidToken = await this.githubTokenValidator.validateToken(githubPersonalAccessToken);
-      if (!isValidToken) {
-        return left(new InvalidGithubTokenError(400));
-      }
+    const isValidToken = await this.githubTokenValidator.validateToken(githubPersonalAccessToken);
+    
+    if (!isValidToken) {
+      return left(new InvalidGithubTokenError(400));
     }
 
     const passwordHash = await this.hashGenerator.hash(password);
