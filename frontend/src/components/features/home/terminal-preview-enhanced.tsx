@@ -150,7 +150,9 @@ export function TerminalPreviewEnhanced() {
               );
 
             gsap.to(lineElement, {
-              opacity: [1, 0.7, 1],
+              keyframes: [
+                { opacity: 1, scale: 1 },
+              ],
               duration: 2,
               repeat: -1,
               ease: "sine.inOut",
@@ -169,8 +171,11 @@ export function TerminalPreviewEnhanced() {
             const checkIcon = lineElement.querySelector(".check-icon");
             if (checkIcon) {
               gsap.to(checkIcon, {
-                opacity: [1, 0.6, 1],
-                scale: [1, 1.1, 1],
+                keyframes: [
+                  { opacity: 1, scale: 1 },
+                  { opacity: 0.6, scale: 1.1 },
+                  { opacity: 1, scale: 1 },
+                ],
                 duration: 1.5,
                 repeat: -1,
                 ease: "sine.inOut",
@@ -192,7 +197,11 @@ export function TerminalPreviewEnhanced() {
           });
 
           gsap.to(cursorRef.current, {
-            opacity: [1, 0],
+            keyframes: [
+              { opacity: 1, scale: 1 },
+              { opacity: 0.7, scale: 1.1 },
+              { opacity: 1, scale: 1 },
+            ],
             duration: 0.8,
             repeat: -1,
             ease: "power2.inOut",

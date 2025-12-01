@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Header, Footer } from "@/components/shared";
@@ -10,7 +10,7 @@ import { HistoryList } from "@/components/features/analysis";
 import { analysisService } from "@/services/analysis";
 import type { AnalysisRecord, GetHistoryParams } from "@/types";
 
-export default function HistoryPage() {
+function HistoryPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [records, setRecords] = useState<AnalysisRecord[]>([]);
@@ -128,6 +128,39 @@ export default function HistoryPage() {
         <Footer maxWidth="max-w-6xl" variant="slate" />
       </div>
     </AuthGuard>
+  );
+}
+
+export default function HistoryPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <div 
+              className="absolute inset-0 opacity-20"
+              style={{
+                background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(34, 211, 238, 0.05) 0%, transparent 50%)",
+              }}
+            />
+            <div 
+              className="absolute inset-0 opacity-15"
+              style={{
+                background: "radial-gradient(ellipse 80% 80% at 100% 100%, rgba(34, 211, 238, 0.03) 0%, transparent 50%)",
+              }}
+            />
+          </div>
+          <div className="flex flex-col items-center gap-4 relative z-10">
+            <div className="h-8 w-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            <p className="text-sm text-slate-400 font-mono" style={{ fontFamily: 'var(--font-geist-mono), ui-monospace, monospace' }}>
+              Loading...
+            </p>
+          </div>
+        </div>
+      }
+    >
+      <HistoryPageContent />
+    </Suspense>
   );
 }
 
