@@ -2,6 +2,8 @@
 
 Automated system that analyzes error stack traces and generates Pull Requests with fixes using Artificial Intelligence.
 
+**Live Project: [Bug to PR](https://bug-to-pr-chi.vercel.app/) 🚀**
+
 ## 📋 Table of Contents
 
 - [Overview](#overview)
