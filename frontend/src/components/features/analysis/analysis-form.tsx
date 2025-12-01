@@ -163,8 +163,11 @@ export function AnalysisForm({
         // Animated glow effect - Warp style
         if (glowRef.current) {
           gsap.to(glowRef.current, {
-            opacity: [0.15, 0.25, 0.15],
-            scale: [1, 1.02, 1],
+            keyframes: [
+              { opacity: 0.15, scale: 1 },
+              { opacity: 0.25, scale: 1.02 },
+              { opacity: 0.15, scale: 1 },
+            ],
             duration: 6,
             repeat: -1,
             ease: "sine.inOut",

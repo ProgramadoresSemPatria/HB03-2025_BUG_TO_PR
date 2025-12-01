@@ -36,8 +36,11 @@ export function AnimatedBackground() {
         gsap.to(particle, {
           y: `+=${Math.random() * 200 + 100}`,
           x: `+=${Math.random() * 100 - 50}`,
-          opacity: [0.2, 0.6, 0.2],
-          scale: [1, 1.5, 1],
+          keyframes: [
+            { opacity: 0.2, scale: 1 },
+            { opacity: 0.6, scale: 1.5 },
+            { opacity: 0.2, scale: 1 },
+          ],
           duration,
           delay,
           repeat: -1,
